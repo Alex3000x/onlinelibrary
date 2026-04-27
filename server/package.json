@@ -1,0 +1,17 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "onlinelibrary's server",
+  "license": "ISC",
+  "author": "Elisa Plessi, Alessio Gurgoglione",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongodb": "^7.2.0"
+  }
+}

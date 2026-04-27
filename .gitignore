@@ -1,0 +1,11 @@
+# Ignora le dipendenze di Node
+node_modules/
+onlinelibrary/node_modules/
+server/node_modules/
+
+# Ignora file di configurazione locale (password, chiavi DB)
+.env
+
+# Ignora le cartelle di build finali
+dist/
+build/
