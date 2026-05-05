@@ -18,7 +18,7 @@ function Book({ bookP }) {
           {/* SINISTRA: Copertina del libro */}
           <Col xs={5}>
             <img 
-              src={bookP.imageUrl} 
+              src={bookP.cover} 
               alt={bookP.title}
               className="img-fluid"
               style={{ 
