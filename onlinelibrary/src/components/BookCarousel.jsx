@@ -32,7 +32,7 @@ function BookCarousel({ title, books }) {
           <SwiperSlide key={book.id}>
             <div className="text-center">
               <img 
-                src={book.imageUrl} 
+                src={book.cover} 
                 alt={book.title} 
                 className="img-fluid shadow-lg mb-3"
                 style={{ 
