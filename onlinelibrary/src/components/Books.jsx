@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Book from "./Book";
+import { Row, Col } from "react-bootstrap";
 
 
 function Books({searchTerm, searchCriteria})
@@ -55,19 +56,14 @@ function Books({searchTerm, searchCriteria})
         return <p>{err.message}</p>
 
     return (
-        <section>
-            {/* <button onClick={onRefresh}>Refresh</button> */}
-            {
-                books.length > 0 ? (books.map((book) => (
-                    <Book key={book._id} bookP={book}/>
-                ))) : (
-                    <p>Non ci sono libri disponibili!</p>
-                )
-            }
-
-
-        </section>
-    )
+  <Row xs={1} md={2} lg={3} className="g-4"> 
+    {books.map(b => (
+      <Col key={b._id}>
+        <Book bookP={b} />
+      </Col>
+    ))}
+  </Row>
+);
 }
 
 export default Books;                
