@@ -9,7 +9,7 @@ import HomeContent from './components/HomeContent'; // Il tuo nuovo componente
 function App() {
   console.log("APP()");
   const [search, setSearch] = useState("");
-  const [criteria, setCriteria] = useState("title");
+  const [criteria, setCriteria] = useState("all"); // "all" come criterio di default
   const [allBooks, setAllBooks] = useState([]);
 
   // Carichiamo i libri all'avvio per alimentare i caroselli della Home
