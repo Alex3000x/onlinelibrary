@@ -3,7 +3,7 @@ import axios from "axios";
 import Book from "./Book";
 
 
-function Books()
+function Books({searchTerm, searchCriteria})
 {
     console.log("BOOKS()");
 
@@ -20,7 +20,8 @@ function Books()
             {
                 setLoading(true);
 
-                const response = await axios.get("http://localhost:3000/library");
+                const response = await axios.get("http://localhost:3000/library/books?" + searchCriteria + "=" + searchTerm);
+
 
                 console.log(response.data);
 
@@ -41,7 +42,7 @@ function Books()
 
         fetchPosts();
 
-    }, [refresh]); 
+    }, [searchTerm, searchCriteria]); 
 
     function onRefresh() {
         setRefresh(refresh + 1);
@@ -55,7 +56,7 @@ function Books()
 
     return (
         <section>
-            <button onClick={onRefresh}>Refresh</button>
+            {/* <button onClick={onRefresh}>Refresh</button> */}
             {
                 books.length > 0 ? (books.map((book) => (
                     <Book key={book._id} bookP={book}/>
