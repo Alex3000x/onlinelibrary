@@ -20,7 +20,7 @@ function Books({searchTerm, searchCriteria})
             {
                 setLoading(true);
 
-                const response = await axios.get("http://localhost:3000/library/books?" + searchCriteria + "=" + searchTerm);
+                const response = await axios.get("http://localhost:3000/onlinelibrary/books?" + searchCriteria + "=" + searchTerm);
 
 
                 console.log(response.data);
