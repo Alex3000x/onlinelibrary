@@ -15,7 +15,7 @@ function Books({searchTerm, searchCriteria})
 
     useEffect(() => {
 
-        async function fetchPosts()
+        async function fetchBooks()
         {
             try
             {
@@ -41,7 +41,7 @@ function Books({searchTerm, searchCriteria})
             }
         }
 
-        fetchPosts();
+        fetchBooks();
 
     }, [searchTerm, searchCriteria]); 
 
