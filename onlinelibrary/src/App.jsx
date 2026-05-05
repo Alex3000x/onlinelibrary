@@ -5,6 +5,7 @@ import Books from './components/Books';
 import SearchBar from './components/SearchBar';
 import Header from './components/Header';
 import HomeContent from './components/HomeContent'; // Il tuo nuovo componente
+import Footer from './components/Footer';
 
 function App() {
   console.log("APP()");
@@ -48,7 +49,10 @@ function App() {
             <hr />
             <Books searchTerm={search} searchCriteria={criteria} />
         </Container>
+
+        
       )}
+      < Footer />
     </>
   );
 }
