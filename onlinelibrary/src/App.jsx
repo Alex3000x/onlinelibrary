@@ -15,7 +15,7 @@ function App() {
 
   // Carichiamo i libri all'avvio per alimentare i caroselli della Home
   useEffect(() => {
-    fetch("./libri.json") // Assicurati che il percorso sia corretto
+    fetch("http://localhost:3000/onlinelibrary/books") // Assicurati che il percorso sia corretto
       .then((res) => res.json())
       .then((data) => setAllBooks(data))
       .catch((err) => console.error("Error loading books:", err));
