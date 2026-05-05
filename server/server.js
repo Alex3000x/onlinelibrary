@@ -72,6 +72,20 @@ app.get("/onlinelibrary/books", async (req, res, next) => {
             };
         }
 
+        // case tolerant filter by all properties (single value)
+        if (req.query.all) {
+            const searchTerm = req.query.all.trim();
+            filter.$or = [
+                { title: { $regex: searchTerm, $options: "i" } },
+                { author: { $regex: searchTerm, $options: "i" } },
+                { publicationYear: { $regex: searchTerm, $options: "i" } },
+                { genre: { $regex: searchTerm, $options: "i" } },
+                { ISBN: { $regex: searchTerm, $options: "i" } },
+                { publisher: { $regex: searchTerm, $options: "i" } },
+                { language: { $regex: searchTerm, $options: "i" } }
+            ];
+        }
+
         console.log(filter);
         const onlinelibrary = await booksCollection.find(filter).toArray();
         res.json(onlinelibrary);
