@@ -4,11 +4,14 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Books from './components/Books';
-
+import SearchBar from './components/SearchBar';
+import Header from './components/Header';
 
 function App() 
 {
   console.log("APP()");
+  const [search, setSearch] = useState("");
+  const [criteria, setCriteria] = useState("title"); // "title" è il default  
 
 
   // // funzione per aggiornare array dei commenti
@@ -20,9 +23,16 @@ function App()
 
   return (
     <Container>
-      <h1>BIBLIOTECCCAHHH!!11!!!</h1>
       
-      <Books />
+      <Header />
+      {/* Usiamo il componente a parte */}
+      <SearchBar search={search} setSearch={setSearch} />
+
+      <p>Search term: {search}</p>
+      <p>Search criteria: {criteria}</p>
+
+      {/* Passiamo il valore a Books */}
+      <Books searchTerm={search} searchCriteria={criteria} />
 
     </Container>
     // <> </> fragment - container fake, mi serve perchè se no mi da errore tutorial, non è però un vero contenitore aggiuntivo
@@ -40,3 +50,4 @@ export default App;
 
 //App rimane molto pulita, perchè abbiamo delegato tutorials e gestire tutte le problematiche, compresa 
 // parte di allineamento e distribuzione
+
