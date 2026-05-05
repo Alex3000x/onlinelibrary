@@ -32,9 +32,7 @@ function App() {
         criteria={criteria} 
         setCriteria={setCriteria} 
       />
-
-      <p>Search term: {search}</p>
-      <p>Search criteria: {criteria}</p>
+      
 
       {/* Visualizzazione condizionale */}
       {!search ? (
