@@ -17,12 +17,17 @@ function App() {
 
   const [selectedBook, setSelectedBook] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [view, setView] = useState("home"); // "home" o "results"
 
   // Funzione per mostrare il catalogo (resettando la ricerca)
   const handleShowCatalog = () => {
-    setSearch(""); // Pulisce eventuali filtri scritti dall'utente
-    // Se usi uno stato per decidere se mostrare la Home o i Risultati, 
-    // assicurati di impostarlo per mostrare i risultati.
+    setSearch("");// Pulisce eventuali filtri scritti dall'utente
+    setView("catalog"); // Imposta la vista sul catalogo
+  };
+
+  const handleShowHome = () => {
+    setSearch("");// Pulisce eventuali filtri scritti dall'utente
+    setView("home"); // Imposta la vista sulla home
   };
 
   // Funzione per aprire il modal passando un libro specifico
@@ -42,7 +47,7 @@ function App() {
   return (
     <>
       {/* Header e SearchBar ora sono liberi di occupare il 100% della larghezza */}
-      <Header onShowCatalog={handleShowCatalog}/>
+      <Header onShowCatalog={handleShowCatalog} onShowHome={handleShowHome} />
       
       <SearchBar 
         search={search} 
@@ -53,9 +58,12 @@ function App() {
       
 
       {/* Visualizzazione condizionale */}
-      {!search ? (
-        // Se non sto cercando, mostro i caroselli (Staff Picks & New Arrivals)
-        <HomeContent allBooks={allBooks} onShowDetail={handleShowDetail}/>
+      {view === "home" ? (
+        <HomeContent 
+          allBooks={allBooks} 
+          onShowDetail={handleShowDetail} 
+          onGoToCatalog={() => setView("catalog")} // Passalo al tasto "Vai al catalogo"
+        />
       ) : (
         // Se sto cercando, mostro la griglia filtrata dentro un Container per i margini
         <Container className="mt-5">
