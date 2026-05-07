@@ -1,4 +1,4 @@
-.counter {
+/* .counter {
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -181,4 +181,17 @@
     right: 0;
     border-right-color: var(--border);
   }
+} */
+
+
+/* Quando il modal è aperto, sfoca il resto della pagina */
+body.modal-open #root,
+body.modal-open .app-container { 
+  filter: blur(5px) grayscale(20%);
+  pointer-events: none;
+  transition: filter 0.3s ease;
+}
+
+.modal-open .modal {
+  filter: none !important;
 }
