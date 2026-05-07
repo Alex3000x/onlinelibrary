@@ -3,11 +3,12 @@ import { Button, Container } from 'react-bootstrap';
 // Note: You'll need to install swiper: npm install swiper
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import Book from './Book.jsx';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-function BookCarousel({ title, books }) {
+function BookCarousel({ title, books, onShowDetail }) {
   return (
     <Container fluid className="py-4 px-5">
       <h3 className="text-white mb-4" style={{ fontWeight: '800', letterSpacing: '1px' }}>
@@ -39,8 +40,10 @@ function BookCarousel({ title, books }) {
                   borderRadius: '5px', 
                   height: '350px', 
                   objectFit: 'cover',
-                  width: '100%' 
+                  width: '100%',
+                  cursor: 'pointer' // Fa apparire la manina
                 }} 
+                onClick={() => onShowDetail(book)} 
               />
               <p className="text-white fw-bold mb-0 text-truncate">{book.title}</p>
               <small className="text-light opacity-75">{book.author}</small>
