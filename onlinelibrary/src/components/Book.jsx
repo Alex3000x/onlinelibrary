@@ -9,7 +9,7 @@ function Book({ bookP, onShowDetail }) {
 
   // Verifichiamo la disponibilità (nel tuo DB il campo potrebbe chiamarsi 'available' o 'availability')
   // Se non esiste ancora nel DB, per ora usiamo una logica di esempio
-  const isAvailable = bookP.availability !== false; 
+  const isAvailable = bookP.available !== false; 
 
   return (
     <Card className="h-100 shadow-sm border-0" style={{ borderRadius: '15px', overflow: 'hidden' }}>

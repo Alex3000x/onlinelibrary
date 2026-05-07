@@ -42,8 +42,8 @@ function BookDetailModal({ show, onHide, book }) {
                 <h2 className="fw-bold mb-0">{book.title}</h2>
                 <h5 className="text-secondary">by {book.author}</h5>
               </div>
-              <Badge pill bg={book.availability !== false ? "success" : "danger"} className="p-2 px-3">
-                {book.availability !== false ? "DISPONIBILE" : "NON DISPONIBILE"}
+              <Badge pill bg={book.available !== false ? "success" : "danger"} className="p-2 px-3">
+                {book.available !== false ? "DISPONIBILE" : "NON DISPONIBILE"}
               </Badge>
             </div>
 
