@@ -53,7 +53,7 @@ function Header({ onShowCatalog , onShowHome}) {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="w-100 d-flex justify-content-around">
               {/* Le voci ora occupano spazio equo e sono "cicciotte" */}
-              {['HOME', 'CATALOGO', 'SERVIZI', 'CONTATTACI', 'ORARI', 'AGGIUNGI LIBRO'].map((item) => (
+              {['HOME', 'CATALOGO', 'SERVIZI', 'CONTATTACI', 'ORARI'].map((item) => (
                 <Nav.Link 
                   key={item}
                   onClick={(e) => {
