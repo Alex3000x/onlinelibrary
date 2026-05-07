@@ -9,6 +9,9 @@ import HomeContent from './components/HomeContent'; // Il tuo nuovo componente
 import Footer from './components/Footer';
 import BookDetailModal from './components/BookDetailModal';
 import AddBookModal from './components/AddBookModal';
+import LoginModal from './components/LoginModal';
+import RegisterModal from './components/RegisterModal';
+
 
 function App() {
   console.log("APP()");
@@ -38,6 +41,18 @@ function App() {
 
   const [showAddModal, setShowAddModal] = useState(false); // Per il modal di aggiunta libro  
 
+  const [showLoginModal, setShowLoginModal] = useState(false); // Per il modal di login
+  const [showRegisterModal, setShowRegisterModal] = useState(false); // Per il modal di registrazione 
+
+  // Funzioni "Switch" per passare da uno all'altro
+  const switchToRegister = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
+  };
+  const switchToLogin = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
+  };
 
   // Carichiamo i libri all'avvio per alimentare i caroselli della Home
   useEffect(() => {
@@ -50,7 +65,7 @@ function App() {
   return (
     <>
       {/* Header e SearchBar ora sono liberi di occupare il 100% della larghezza */}
-      <Header onShowCatalog={handleShowCatalog} onShowHome={handleShowHome} />
+      <Header onShowCatalog={handleShowCatalog} onShowHome={handleShowHome} onShowLogin={() => setShowLoginModal(true)} />
       
       <SearchBar 
         search={search} 
@@ -99,6 +114,18 @@ function App() {
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
       />  
+
+      <LoginModal 
+        show={showLoginModal} 
+        onHide={() => setShowLoginModal(false)} 
+        onSwitchToRegister={switchToRegister} 
+      />
+
+      <RegisterModal 
+        show={showRegisterModal} 
+        onHide={() => setShowRegisterModal(false)} 
+        onSwitchToLogin={switchToLogin} 
+      />
 
     </>
       
