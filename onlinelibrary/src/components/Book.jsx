@@ -1,6 +1,6 @@
 import { Card, Button, Row, Col, Badge } from 'react-bootstrap';
 
-function Book({ bookP }) {
+function Book({ bookP, onShowDetail }) {
   // Funzione per tagliare la descrizione se troppo lunga
   const truncateDescription = (text, maxLength) => {
     if (!text) return "";
@@ -67,8 +67,41 @@ function Book({ bookP }) {
           </Col>
         </Row>
 
-        {/* BOTTONE DETTAGLI: In basso a destra */}
-        <div className="d-flex justify-content-end mt-2">
+        <div className="d-flex justify-content-between align-items-center mt-2 w-100">
+          {/* GRUPPO DI SINISTRA: Modifica ed Elimina */}
+          <div className="d-flex gap-2"> 
+            <Button 
+              variant="outline-warning"
+              className="d-flex align-items-center justify-content-center p-0"
+              style={{ 
+                width: '35px',     // Larghezza fissa
+                height: '35px',    // Altezza uguale alla larghezza
+                borderRadius: '50%', // Cerchio perfetto
+                borderWidth: '2px',
+                fontSize: '0.9rem'
+              }}
+              onClick={() => console.log("Modifica")}
+            >
+              ✏️
+            </Button>
+
+            <Button 
+              variant="outline-danger" 
+              className="d-flex align-items-center justify-content-center p-0"
+              style={{ 
+                width: '35px', 
+                height: '35px', 
+                borderRadius: '50%', 
+                borderWidth: '2px',
+                fontSize: '0.9rem'
+              }}
+              onClick={() => console.log("Elimina")}
+            >
+              🗑️
+            </Button>
+          </div>
+
+          {/* BOTTONE A DESTRA: Show More */}
           <Button 
             variant="outline-info" 
             size="sm"
@@ -78,6 +111,7 @@ function Book({ bookP }) {
               padding: '5px 20px',
               borderWidth: '2px'
             }}
+            onClick={() => onShowDetail(bookP)}
           >
             Show More
           </Button>
