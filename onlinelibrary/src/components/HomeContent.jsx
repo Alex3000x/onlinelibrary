@@ -1,7 +1,7 @@
 import BookCarousel from './BookCarousel.jsx';
 import { Button, Container } from 'react-bootstrap';
 
-function HomeContent({ allBooks }) {
+function HomeContent({ allBooks, onShowDetail }) {
   
   // LOGIC: Filtering books for categories
   // Staff Picks: Let's pretend books with ID 1 to 8 are our favorites
@@ -22,10 +22,10 @@ function HomeContent({ allBooks }) {
   return (
     <div style={mainSectionStyle}>
       {/* SECTION 1: STAFF PICKS */}
-      <BookCarousel title="Staff Picks of the Week" books={staffPicks} />
+      <BookCarousel title="Staff Picks of the Week" books={staffPicks} onShowDetail={onShowDetail} />
 
       {/* SECTION 2: NEW ARRIVALS */}
-      <BookCarousel title="New Arrivals" books={newArrivals} />
+      <BookCarousel title="New Arrivals" books={newArrivals} onShowDetail={onShowDetail}/>
 
       {/* BROWSE BUTTON: Exactly like "Screenshot 2026-05-01 131714.jpg" */}
       <Container className="text-center mt-5">
