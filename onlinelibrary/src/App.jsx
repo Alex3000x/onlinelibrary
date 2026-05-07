@@ -8,16 +8,16 @@ import Header from './components/Header';
 import HomeContent from './components/HomeContent'; // Il tuo nuovo componente
 import Footer from './components/Footer';
 import BookDetailModal from './components/BookDetailModal';
+import AddBookModal from './components/AddBookModal';
 
 function App() {
   console.log("APP()");
   const [search, setSearch] = useState("");
   const [criteria, setCriteria] = useState("all"); // "all" come criterio di default
   const [allBooks, setAllBooks] = useState([]);
-
   const [selectedBook, setSelectedBook] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [view, setView] = useState("home"); // "home" o "results"
+  const [view, setView] = useState("home"); // "home" o "results"  
 
   // Funzione per mostrare il catalogo (resettando la ricerca)
   const handleShowCatalog = () => {
@@ -35,6 +35,9 @@ function App() {
     setSelectedBook(book);
     setShowModal(true);
   };
+
+  const [showAddModal, setShowAddModal] = useState(false); // Per il modal di aggiunta libro  
+
 
   // Carichiamo i libri all'avvio per alimentare i caroselli della Home
   useEffect(() => {
@@ -55,6 +58,7 @@ function App() {
         criteria={criteria} 
         setCriteria={setCriteria} 
         setView={setView}
+        onShowAddModal={() => setShowAddModal(true)} // Passa la funzione per mostrare il modal di aggiuntaq
       />
       
 
@@ -90,6 +94,11 @@ function App() {
         onHide={() => setShowModal(false)} 
         book={selectedBook} 
       />
+
+      <AddBookModal
+        show={showAddModal}
+        onHide={() => setShowAddModal(false)}
+      />  
 
     </>
       
