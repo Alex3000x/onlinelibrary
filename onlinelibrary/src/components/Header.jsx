@@ -1,6 +1,6 @@
 import { Container, Row, Col, Button, Nav, Navbar } from 'react-bootstrap';
 
-function Header({ onShowCatalog , onShowHome}) {
+function Header({ onShowCatalog , onShowHome, onShowLogin}) {
   return (
     <header className="bg-white" style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
       
@@ -30,6 +30,7 @@ function Header({ onShowCatalog , onShowHome}) {
           <Col xs={6} className="text-end">
             <Button 
               variant="outline-primary" 
+              onClick = {onShowLogin}
               style={{ 
                 borderRadius: '5px', 
                 fontWeight: '800', 
@@ -40,7 +41,7 @@ function Header({ onShowCatalog , onShowHome}) {
                 textTransform: 'uppercase'
               }}
             >
-              Login
+              LOGIN
             </Button>
           </Col>
         </Row>
