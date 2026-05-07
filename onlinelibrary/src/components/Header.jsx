@@ -1,6 +1,6 @@
 import { Container, Row, Col, Button, Nav, Navbar } from 'react-bootstrap';
 
-function Header({ onShowCatalog }) {
+function Header({ onShowCatalog , onShowHome}) {
   return (
     <header className="bg-white" style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
       
@@ -53,13 +53,17 @@ function Header({ onShowCatalog }) {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="w-100 d-flex justify-content-around">
               {/* Le voci ora occupano spazio equo e sono "cicciotte" */}
-              {['CATALOGO', 'SERVIZI', 'CONTATTACI', 'ORARI', 'AGGIUNGI LIBRO'].map((item) => (
+              {['HOME', 'CATALOGO', 'SERVIZI', 'CONTATTACI', 'ORARI', 'AGGIUNGI LIBRO'].map((item) => (
                 <Nav.Link 
                   key={item}
                   onClick={(e) => {
                   if (item === 'CATALOGO') {
                     e.preventDefault(); // Impedisce il salto della pagina (#catalogo)
                     onShowCatalog();    // La funzione che hai passato come prop
+                  }
+                  if (item === 'HOME') {
+                    e.preventDefault();
+                    onShowHome();
                   }
                 }}
                 href={item === 'CATALOGO' ? "#" : `#${item.toLowerCase()}`}
