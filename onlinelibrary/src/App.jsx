@@ -54,6 +54,7 @@ function App() {
         setSearch={setSearch} 
         criteria={criteria} 
         setCriteria={setCriteria} 
+        setView={setView}
       />
       
 
