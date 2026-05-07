@@ -1,6 +1,6 @@
 import { Form, InputGroup, Button, Container } from 'react-bootstrap';
 
-function SearchBar({ search, setSearch, criteria, setCriteria }) {
+function SearchBar({ search, setSearch, criteria, setCriteria, setView }) {
   
   // STILE PER LO SFONDO (Inalterato come da tuo codice)
   const backgroundStyle = {
@@ -53,7 +53,7 @@ function SearchBar({ search, setSearch, criteria, setCriteria }) {
 
             {/* Input di testo (Font più cicciotto) */}
             <Form.Control
-              placeholder={`Search by ${criteria}...`}
+              placeholder={`Cerca per ${criteria}...`}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="border-0 shadow-none"
@@ -62,7 +62,8 @@ function SearchBar({ search, setSearch, criteria, setCriteria }) {
 
             {/* Bottone Lente (Inalterato) */}
             <Button 
-              variant="success" 
+              variant="success"
+              onClick={() => setView("catalog") && setSearch(search)}
               style={{ backgroundColor: '#00c896', borderColor: '#00c896', width: '60px' }}
             >
               🔍
