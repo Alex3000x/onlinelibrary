@@ -27,7 +27,7 @@ app.get("/onlinelibrary/books", async (req, res, next) => {
         // case tolerant filter by author (single value)
         if (req.query.author) {
             filter.author = {
-                $regex: request.query.author.trim(),
+                $regex: req.query.author.trim(),
                 $options: "i"
             };
         }
