@@ -13,7 +13,7 @@ function Footer() {
     fontWeight: '800',
     marginBottom: '25px',
     fontSize: '1.5rem',
-    color: '#107c91' // Usiamo il teal per richiamare il tema
+    color: '#e190b6' // Usiamo il teal per richiamare il tema
   };
 
   const listStyle = {
