@@ -5,7 +5,7 @@ function SearchBar({ search, setSearch, criteria, setCriteria, setView, onShowAd
   
 
   const backgroundStyle = {
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000')`, 
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0)), url("/IMG_1634.JPG")`, 
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     padding: '80px 0', 
