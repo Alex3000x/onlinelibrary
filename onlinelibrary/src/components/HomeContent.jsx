@@ -13,7 +13,7 @@ function HomeContent({ allBooks, onShowDetail }) {
     .slice(0, 10);
 
   const mainSectionStyle = {
-    backgroundColor: '#107c91', // Matching the teal/blue background from your screenshot
+    backgroundColor: '#BCD3E0', 
     paddingBottom: '60px',
     width: '100vw',
     marginLeft: 'calc(-50vw + 50%)'
@@ -32,13 +32,13 @@ function HomeContent({ allBooks, onShowDetail }) {
         <Button 
           variant="warning" 
           style={{ 
-            backgroundColor: '#ffc107', 
+            backgroundColor: '#e190b6', 
             border: 'none',
             padding: '12px 40px',
             fontWeight: '800',
             fontSize: '1.2rem',
             borderRadius: '5px',
-            color: '#333'
+            color: '#fffcee'
           }}
         >
           Browse Catalog &rarr;
