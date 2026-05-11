@@ -6,28 +6,25 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
       
       {/* 1. BANNER ALTO (Full Width) */}
       <Container fluid className="px-4">
-        <Row className="align-items-center" style={{ minHeight: '120px' }}>
-          {/* Sinistra: Area Logo (metà banner) */}
-          <Col xs={6}>
-            <div style={{ 
-              width: '100%', 
-              maxWidth: '500px', // Limita la crescita del logo su schermi enormi
-              height: '80px', 
-              backgroundColor: '#f8f9fa', 
-              border: '1px dashed #ccc',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px'
-            }}>
-              <span className="text-secondary" style={{ fontWeight: '800', fontSize: '1.2rem', letterSpacing: '1px' }}>
-                LOGO BIBLIOTECA
-              </span>
-            </div>
+        <Row className="align-items-center g-0" style={{ minHeight: '120px'}}>
+            {/* Colonna Logo: prende quasi tutto lo spazio (10 su 12) */}
+          {/* Colonna LOGO: Prende 11 spazi su 12! */}
+          <Col xs={10} md={11}> 
+            <img 
+              src="/5771921865684226457.jpg" 
+              alt="Online Library" 
+              style={{ 
+                width: '100%',      // Forza il logo a allargarsi su tutta la colonna
+                height: 'auto', 
+                maxHeight: '180px',  // Alza questo valore per farlo diventare "cicciotto"
+                objectFit: 'contain',
+                objectPosition: 'left' // Tiene il logo attaccato a sinistra
+              }} 
+            />
           </Col>
 
           {/* Destra: Bottone Login */}
-          <Col xs={6} className="text-end">
+          <Col xs={2} md={1} className="text-end">
             <Button 
               variant="outline-primary" 
               onClick = {onShowLogin}
@@ -36,8 +33,8 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
                 fontWeight: '800', 
                 padding: '10px 30px',
                 borderWidth: '2px',
-                borderColor: '#007bff',
-                color: '#007bff',
+                borderColor: '#e190b6',
+                color: '#e190b6',
                 textTransform: 'uppercase'
               }}
             >
