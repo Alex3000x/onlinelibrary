@@ -1,6 +1,6 @@
 import { Card, Button, Row, Col, Badge } from 'react-bootstrap';
 
-function Book({ bookP, onShowDetail }) {
+function Book({ bookP, onShowDetail, onDelete }) {
   // Funzione per tagliare la descrizione se troppo lunga
   const truncateDescription = (text, maxLength) => {
     if (!text) return "";
@@ -95,7 +95,7 @@ function Book({ bookP, onShowDetail }) {
                 borderWidth: '2px',
                 fontSize: '0.9rem'
               }}
-              onClick={() => console.log("Elimina")}
+              onClick={() => onDelete(bookP._id)}
             >
               🗑️
             </Button>

@@ -4,7 +4,7 @@ import Book from "./Book";
 import { Row, Col } from "react-bootstrap";
 
 
-function Books({searchTerm, searchCriteria, allBooks, onShowDetail})
+function Books({searchTerm, searchCriteria, allBooks, onShowDetail, onDelete})
 {
     console.log("BOOKS()");
 
@@ -59,7 +59,7 @@ function Books({searchTerm, searchCriteria, allBooks, onShowDetail})
   <Row xs={1} md={2} lg={3} className="g-4"> 
     {books.map(b => (
       <Col key={b._id}>
-        <Book bookP={b} onShowDetail={onShowDetail}/>
+        <Book bookP={b} onShowDetail={onShowDetail} onDelete={onDelete} />
       </Col>
     ))}
   </Row>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import axios from "axios";
 
 function AddBookModal({ show, onHide }) {
   // Stato iniziale con i nomi dei campi esatti del tuo DB
@@ -17,6 +18,7 @@ function AddBookModal({ show, onHide }) {
   };
 
   const [formData, setFormData] = useState(initialFormState);
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -26,11 +28,55 @@ function AddBookModal({ show, onHide }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log("Dati pronti per il server:", formData);
-    // Qui andrà la fetch POST verso il backend
-    // onHide(); // Chiude il modal dopo l'invio
+
+    try {
+      console.log("Dati pronti per il server:", formData);
+
+      // Qui andrà la fetch POST verso il backend
+      const response = await axios.post("http://localhost:3000/onlinelibrary/books",
+          {
+            ...formData,
+            publicationYear: Number(formData.publicationYear),
+            ISBN: Number(formData.isbn),
+          }
+        );
+        
+        setMessage(response.data.message);
+        console.log(response.data);
+
+        setFormData({
+          title: '',
+          author: '',
+          publicationYear: '',
+          genre: '',
+          isbn: '',
+          publisher: '',
+          available: true,
+          description: '',
+          language: '',
+          cover: ''
+        });
+
+    } catch (err) {
+      console.error(err);
+
+      if (err.response?.status === 409) {
+        const error = err.response.data.error;
+
+        setMessage(error);
+      } else if (err.response?.status === 400) {
+        const errors = err.response.data.errors;
+
+        setMessage(errors.map(e => e.msg).join(", "));
+      } else {
+        const error = err.response.data.error;
+
+        setMessage(error);
+      }
+    }
+    onHide(); // Chiude il modal dopo l'invio
   };
 
   return (
@@ -42,7 +88,7 @@ function AddBookModal({ show, onHide }) {
       contentClassName="custom-modal-blur"
     >
       <Modal.Header closeButton className="border-0">
-        <Modal.Title className="fw-bold text-info">✨ Aggiungi Nuovo Libro</Modal.Title>
+        <Modal.Title className="fw-bold text-info">✨🧚 Aggiungi Nuovo Libro</Modal.Title>
       </Modal.Header>
 
       <Modal.Body className="px-4">
@@ -156,7 +202,7 @@ function AddBookModal({ show, onHide }) {
             <Button variant="outline-secondary" onClick={onHide} className="px-4 rounded-pill">
               Annulla
             </Button>
-            <Button variant="info" type="submit" className="px-4 rounded-pill fw-bold text-white">
+            <Button variant="info" type="submit" onClick={handleSubmit} className="px-4 rounded-pill fw-bold text-white">
               Salva Libro
             </Button>
           </div>

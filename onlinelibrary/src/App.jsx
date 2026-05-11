@@ -11,6 +11,7 @@ import BookDetailModal from './components/BookDetailModal';
 import AddBookModal from './components/AddBookModal';
 import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
+import axios from 'axios';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
   const [selectedBook, setSelectedBook] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [view, setView] = useState("home"); // "home" o "results"  
+  const [message, setMessage] = useState('');
 
   // Funzione per mostrare il catalogo (resettando la ricerca)
   const handleShowCatalog = () => {
@@ -37,6 +39,29 @@ function App() {
   const handleShowDetail = (book) => {
     setSelectedBook(book);
     setShowModal(true);
+  };
+
+  const handleDelete = async (bookId) => {
+    try {
+        console.log("Tentativo di eliminazione libro con ID:", bookId);
+
+        // Chiamata DELETE coerente con la tua handleSubmit
+        const response = await axios.delete(`http://localhost:3000/onlinelibrary/books/${bookId}`);
+
+        setMessage(response.data.message);
+        console.log(response.data);
+
+        // Aggiorna lo stato per rimuovere il libro dalla UI istantaneamente
+        setAllBooks(prevBooks => prevBooks.filter(book => book._id !== bookId));
+
+    } catch (err) {
+        console.error(err);
+        if (err.response?.status === 404) {
+            setMessage(err.response.data.error);
+        } else {
+            setMessage(err.response.data.error || "Errore durante l'eliminazione");
+        }
+    }
   };
 
   const [showAddModal, setShowAddModal] = useState(false); // Per il modal di aggiunta libro  
@@ -96,6 +121,7 @@ function App() {
               searchCriteria={criteria} 
               allBooks={allBooks} // Passalo se serve al componente
               onShowDetail={handleShowDetail}
+              onDelete={handleDelete}
             />
         </Container>
 
