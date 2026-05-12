@@ -6,7 +6,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
       
       {/* 1. BANNER ALTO (Full Width) */}
       <Container fluid className="px-4">
-        <Row className="align-items-center g-0" style={{ minHeight: '120px'}}>
+        <Row className="align-items-center g-0" style={{ minHeight: '120gipx'}}>
             {/* Colonna Logo: prende quasi tutto lo spazio (10 su 12) */}
           {/* Colonna LOGO: Prende 11 spazi su 12! */}
           <Col xs={10} md={11}> 
@@ -45,14 +45,12 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
       </Container>
 
       {/* 2. NAVBAR (Full Width e perfettamente allineata) */}
-      <Navbar bg="light" expand="lg" className="border-top border-bottom p-0" style={{ backgroundColor: '#fdfdfd' }}>
-        <Container fluid className="px-0"> 
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="w-100 d-flex justify-content-around">
-              {/* Le voci ora occupano spazio equo e sono "cicciotte" */}
+      <div className="navbar navbar-light bg-light border-top border-bottom p-0" style={{ backgroundColor: '#fdfdfd' }}>
+           <Container fluid className="px-0"> 
+          {/* flex-row e w-100 mantengono tutto sulla stessa linea senza collassare */}
+            <div className="nav w-100 d-flex flex-row justify-content-around text-center">              {/* Le voci ora occupano spazio equo e sono "cicciotte" */}
               {['HOME', 'CATALOGO', 'SERVIZI', 'CONTATTACI', 'ORARI'].map((item) => (
-                <Nav.Link 
+                <a 
                   key={item}
                   onClick={(e) => {
                   if (item === 'CATALOGO') {
@@ -65,20 +63,21 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
                   }
                 }}
                 href={item === 'CATALOGO' ? "#" : `#${item.toLowerCase()}`}
-                  className="text-dark py-3" 
+                  className="nav-link text-dark py-3"
                   style={{ 
-                    fontWeight: '850', 
-                    fontSize: '1.1rem',
-                    letterSpacing: '0.5px'
+                  fontWeight: '850', 
+                  fontSize: 'clamp(0.6rem, 2.2vw, 1rem)', // Unica aggiunta per non farlo sparire
+                  whiteSpace: 'nowrap',
+                  flex: '1'
                   }}
                 >
                   {item}
-                </Nav.Link>
+                </a>
               ))}
-            </Nav>
-          </Navbar.Collapse>
+            </div>
+
         </Container>
-      </Navbar>
+      </div>
     </header>
   );
 }
