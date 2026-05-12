@@ -85,14 +85,21 @@ function App() {
     ISBN: Number(updatedFormData.ISBN),
   });
 
-    setMessage(response.data.message);
-    console.log(response.data);
+    console.log("Risposta server:", response.data);
 
     // Aggiorna lo stato allBooks: cerca il libro modificato e sostituiscilo con i nuovi dati
-    setAllBooks(prevBooks => 
-      prevBooks.map(book => book._id === bookId ? response.data.updatedBook : book)
-    );
-
+    if (response.data.updatedBook) {
+      setAllBooks(prevBooks => 
+        prevBooks.map(book => {
+          // Aggiungiamo un controllo di sicurezza per 'book'
+          if (!book) return book; 
+          return book._id === bookId ? response.data.updatedBook : book;
+        })
+      );
+      setMessage(response.data.message);
+    } else {
+      setMessage("Libro aggiornato, ma non ho ricevuto i dati aggiornati dal server.");
+    }
   } catch (err) {
     console.error(err);
     if (err.response?.status === 400) {
@@ -210,7 +217,6 @@ const handleUpdateClick = (book) => {
         onHide={() => setShowUpdateModal(false)}
         bookP={bookToUpdate}
         onUpdate={handleUpdate}
-        
       />
 
       <LoginModal 
