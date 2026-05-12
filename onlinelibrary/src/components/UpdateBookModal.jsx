@@ -167,7 +167,7 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
           
           <div className="d-flex justify-content-end gap-2 mt-4">
             <Button variant="outline-secondary" onClick={onHide} className="px-4 rounded-pill">Annulla</Button>
-            <Button variant="warning" type="submit" className="px-4 rounded-pill fw-bold text-white">Aggiorna</Button>
+            <Button variant="warning" type="submit" onClick={onUpdate} className="px-4 rounded-pill fw-bold text-white">Aggiorna</Button>
           </div>
         </Form>
       </Modal.Body>
