@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Book from "./Book";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Container, Badge, Form } from "react-bootstrap";
 
 
-function Books({searchTerm, searchCriteria, allBooks, onShowDetail, onDelete})
+function Books({searchTerm, searchCriteria, allBooks, onShowDetail, onUpdate, onDelete})
 {
     console.log("BOOKS()");
 
@@ -12,6 +12,7 @@ function Books({searchTerm, searchCriteria, allBooks, onShowDetail, onDelete})
     const [refresh, setRefresh] = useState(0);
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState(null);
+    const [sortBy, setSortBy] = useState("title");
 
     useEffect(() => {
 
@@ -45,9 +46,18 @@ function Books({searchTerm, searchCriteria, allBooks, onShowDetail, onDelete})
 
     }, [searchTerm, searchCriteria]); 
 
+    const sortedBooks = [...books].sort((a, b) => {
+        if (sortBy === "title") return (a.title || "").localeCompare(b.title || "");
+        if (sortBy === "author") return (a.author || "").localeCompare(b.author || "");
+        if (sortBy === "publicationYear") return b.publicationYear - a.publicationYear;
+        return 0;
+    });
+
+
     function onRefresh() {
         setRefresh(refresh + 1);
     }
+
 
     if(loading)
         return <p>Loading...</p>
@@ -56,14 +66,44 @@ function Books({searchTerm, searchCriteria, allBooks, onShowDetail, onDelete})
         return <p>{err.message}</p>
 
     return (
-  <Row xs={1} md={2} lg={3} className="g-4"> 
-    {books.map(b => (
-      <Col key={b._id}>
-        <Book bookP={b} onShowDetail={onShowDetail} onDelete={onDelete} />
-      </Col>
-    ))}
-  </Row>
-);
-}
+    <Container>
+            {/* BARRA DELLO STATO: Contatore e Ordinamento */}
+            <div className="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded shadow-sm">
+
+                <div className="d-flex align-items-center gap-2">
+                    <span className="text-muted fw-bold small">ORDINA PER:</span>
+                    <Form.Select 
+                        size="sm" 
+                        style={{ width: '150px', borderRadius: '20px' }}
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                    >
+                        <option value="title">Titolo</option>
+                        <option value="author">Autore</option>
+                        <option value="publicationYear">Anno (Recenti)</option>
+                    </Form.Select>
+                </div>
+
+                <div>
+                    <span className="fw-bold text-secondary">
+                    Risultati trovati: <Badge bg="info">{sortedBooks.length}</Badge>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            
+            <Row xs={1} md={2} lg={3} className="g-4"> 
+                {sortedBooks.map(b => (
+                <Col key={b._id}>
+                    <Book bookP={b} onShowDetail={onShowDetail} onUpdate={onUpdate} onDelete={onDelete}/>
+                </Col>
+                ))}
+            </Row>
+        </Container>
+        );
+    }
 
 export default Books;                
