@@ -153,11 +153,11 @@ app.post("/onlinelibrary/books", async (req, res, next) => {
         language: req.body.language,
         cover: req.body.cover};
 
-        const result = await booksCollection.insertOne(newBook);
+        const book = await booksCollection.insertOne(newBook);
 
         res.status(201).json({
         message: "Book added to the library",
-        id: result.insertedId
+        id: book.insertedId
         });
 
     } catch (err) {
@@ -178,7 +178,7 @@ app.delete("/onlinelibrary/books/:id", async (req, res, next) => {
 
         console.log("ID da eliminare:", id);
 
-        // Trasforma la stringa in un vero ObjectId di MongoDB
+        // Trasforma la stringa in un vero ObjectId di MongoDB, perché nel database l'ID è memorizzato come ObjectId, non come stringa
         const deletedBook = await booksCollection.deleteOne({ _id: new ObjectId(id) });
 
         if (deletedBook.deletedCount === 0) {
@@ -201,6 +201,55 @@ app.delete("/onlinelibrary/books/:id", async (req, res, next) => {
         });
     }
 });
+
+app.put("/onlinelibrary/books/:id", async (req, res, next) => {
+    try {
+        const booksCollection = db.collection("books");
+        const { id } = req.params; // Estrae l'ID dall'URL
+
+        const updatedBook = {
+            title: req.body.title,
+            author: req.body.author,
+            publicationYear: Number(req.body.publicationYear),
+            genre: req.body.genre,
+            ISBN: Number(req.body.ISBN),
+            publisher: req.body.publisher,
+            available: req.body.available,
+            description: req.body.description,
+            language: req.body.language,
+            cover: req.body.cover
+        };
+
+        const book = await booksCollection.findOneAndUpdate(
+            { _id: new ObjectId(id) },
+            { $set: updatedBook },
+            { returnDocument: "after" } // restituisce il documento aggiornato
+        );
+        if (!book) {
+            return res.status(404).json({ 
+                error: "Libro non trovato nel database." 
+            });
+        }
+
+        // Risposta di successo coerente con ciò che il tuo frontend si aspetta
+        res.status(200).json({
+        message: "Libro aggiornato con successo",
+        updatedBook: book.value
+        });
+
+    } catch (err) {
+        console.error("Errore lato server durante la PUT:", err);
+        
+        // Gestione errori generica (es. ID non valido)
+        res.status(500).json({ 
+            error: "Si è verificato un errore interno durante l'aggiornamento del libro." 
+        });
+        next(err);
+    }
+});
+
+
+
 
 // 404 handler for unmatched routes
 app.use((req, res, next) => {
