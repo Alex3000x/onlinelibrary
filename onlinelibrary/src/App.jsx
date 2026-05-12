@@ -9,9 +9,11 @@ import HomeContent from './components/HomeContent'; // Il tuo nuovo componente
 import Footer from './components/Footer';
 import BookDetailModal from './components/BookDetailModal';
 import AddBookModal from './components/AddBookModal';
+import UpdateBookModal from './components/UpdateBookModal';
 import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
 import axios from 'axios';
+import DeleteConfirmModal from './components/DeleteConfirmModal';
 
 
 function App() {
@@ -23,16 +25,23 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [view, setView] = useState("home"); // "home" o "results"  
   const [message, setMessage] = useState('');
+  const [bookToUpdate, setBookToUpdate] = useState(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Per il modal di conferma eliminazione
+  const [bookToDelete, setBookToDelete] = useState(null); // Per tenere traccia del libro che vogliamo eliminare
+
 
   // Funzione per mostrare il catalogo (resettando la ricerca)
   const handleShowCatalog = () => {
     setSearch("");// Pulisce eventuali filtri scritti dall'utente
     setView("catalog"); // Imposta la vista sul catalogo
+    window.scrollTo(0, 0); // Scrolla in alto per mostrare subito il catalogo
   };
 
   const handleShowHome = () => {
     setSearch("");// Pulisce eventuali filtri scritti dall'utente
     setView("home"); // Imposta la vista sulla home
+    window.scrollTo(0, 0); // Scrolla in alto per mostrare subito la home
   };
 
   // Funzione per aprire il modal passando un libro specifico
@@ -64,6 +73,45 @@ function App() {
     }
   };
 
+  const handleUpdate = async (bookId, updatedFormData) => {
+  try {
+    console.log("Tentativo di modifica libro con ID:", bookId);
+    console.log("Nuovi dati:", updatedFormData);
+
+  // Chiamata PUT coerente con lo stile delle altre funzioni
+  const response = await axios.put(`http://localhost:3000/onlinelibrary/books/${bookId}`, {
+    ...updatedFormData,
+    publicationYear: Number(updatedFormData.publicationYear),
+    ISBN: Number(updatedFormData.ISBN),
+  });
+
+    setMessage(response.data.message);
+    console.log(response.data);
+
+    // Aggiorna lo stato allBooks: cerca il libro modificato e sostituiscilo con i nuovi dati
+    setAllBooks(prevBooks => 
+      prevBooks.map(book => book._id === bookId ? response.data.updatedBook : book)
+    );
+
+  } catch (err) {
+    console.error(err);
+    if (err.response?.status === 400) {
+      // Gestione errori di validazione (es. campi mancanti)
+      const errors = err.response.data.errors;
+      setMessage(errors ? errors.map(e => e.msg).join(", ") : err.response.data.error);
+    } else if (err.response?.status === 404) {
+      setMessage("Libro non trovato nel database.");
+    } else {
+      setMessage(err.response?.data?.error || "Errore durante la modifica");
+    }
+  }
+};
+
+const handleUpdateClick = (book) => {
+  setBookToUpdate(book);
+  setShowUpdateModal(true);
+};
+
   const [showAddModal, setShowAddModal] = useState(false); // Per il modal di aggiunta libro  
 
   const [showLoginModal, setShowLoginModal] = useState(false); // Per il modal di login
@@ -78,6 +126,20 @@ function App() {
     setShowRegisterModal(false);
     setShowLoginModal(true);
   };
+
+  const handleOpenDeleteModal = (book) => {
+    setBookToDelete(book); // Mostra modal elimminazione e salviamo l'intero libro per leggerne il titolo nel modal
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (bookToDelete) {
+      await handleDelete(bookToDelete._id); // Chiamiamo la tua vecchia funzione usando l'ID
+      setShowDeleteModal(false); // Chiudiamo il modal
+      setBookToDelete(null); // Puliamo lo stato
+    }
+  };
+
 
   // Carichiamo i libri all'avvio per alimentare i caroselli della Home
   useEffect(() => {
@@ -107,7 +169,8 @@ function App() {
         <HomeContent 
           allBooks={allBooks} 
           onShowDetail={handleShowDetail} 
-          onGoToCatalog={() => setView("catalog")} // Passalo al tasto "Vai al catalogo"
+          onGoToCatalog={() => setView("catalog")}
+          onShowCatalog={handleShowCatalog}
         />
       ) : (
         // Se sto cercando, mostro la griglia filtrata dentro un Container per i margini
@@ -121,7 +184,8 @@ function App() {
               searchCriteria={criteria} 
               allBooks={allBooks} // Passalo se serve al componente
               onShowDetail={handleShowDetail}
-              onDelete={handleDelete}
+              onDelete={handleOpenDeleteModal}
+              onUpdate={handleUpdateClick}
             />
         </Container>
 
@@ -139,7 +203,15 @@ function App() {
       <AddBookModal
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
-      />  
+      />
+
+      <UpdateBookModal
+        show={showUpdateModal}
+        onHide={() => setShowUpdateModal(false)}
+        bookP={bookToUpdate}
+        onUpdate={handleUpdate}
+        
+      />
 
       <LoginModal 
         show={showLoginModal} 
@@ -151,6 +223,14 @@ function App() {
         show={showRegisterModal} 
         onHide={() => setShowRegisterModal(false)} 
         onSwitchToLogin={switchToLogin} 
+      />
+
+
+      <DeleteConfirmModal 
+        show={showDeleteModal} 
+        onHide={() => setShowDeleteModal(false)} 
+        onConfirm={handleConfirmDelete}
+        bookTitle={bookToDelete?.title} 
       />
 
     </>
