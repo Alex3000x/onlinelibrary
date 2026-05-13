@@ -1,6 +1,15 @@
-import { Container, Row, Col, Button, Nav, Navbar } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 function Header({ onShowCatalog , onShowHome, onShowLogin}) {
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+
   return (
     <header className="bg-white" style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
       
@@ -61,7 +70,12 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
                     e.preventDefault();
                     onShowHome();
                   }
+
+                  if (item === 'ORARI') scrollToSection('orari-section');
+                  if (item === 'CONTATTACI') scrollToSection('contatti-section');
+
                 }}
+                
                 href={item === 'CATALOGO' ? "#" : `#${item.toLowerCase()}`}
                   className="nav-link text-dark py-3"
                   style={{ 
