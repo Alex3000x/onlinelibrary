@@ -13,7 +13,8 @@ function SearchBar({ search, setSearch, criteria, setCriteria, setView, onShowAd
     textAlign: 'center',
     width: '100vw',    
     marginLeft: 'calc(-50vw + 50%)', 
-    marginBottom: '40px'
+    marginBottom: '10px',
+    marginTop: '10px',
   };
 
   const handleSubmit = (e) => {
@@ -87,7 +88,7 @@ function SearchBar({ search, setSearch, criteria, setCriteria, setView, onShowAd
                 type="submit"
                 variant="success"
                 onClick={() => setView("catalog") && setSearch(search)}
-                style={{ backgroundColor: '#00c896', borderColor: '#00c896', width: '60px' }}
+                style={{ backgroundColor: '#E190B6', borderColor: '#E190B6', width: '60px' }}
                 >
                 🔍
               </Button>
