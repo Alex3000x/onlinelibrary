@@ -9,18 +9,15 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
     genre: '',
     ISBN: '',
     publisher: '',
-    available: true,
     description: '',
     language: '',
+    copiesNumber: 0,
     cover: ''
   });
 
   const genres = ["Fantasy", "Romanzo classico", "Videogiochi", "Cultura orientale", "Arte", "Cucina", "Viaggi", "Storia", "Informatica", "Realismo magico", "Narrativa contemporanea", "Avventura", "Favola", "Psicologia", "Filosofia", "Horror / Sci-Fi", "Scienza", "Business", "Economia", "Poesia / Spiritualità"];
   const languages = ["Italiano", "Inglese", "Francese", "Tedesco", "Spagnolo", "Russo", "Giapponese", "Norvegese"];
 
-
-  // Ogni volta che il 'book' passato come prop cambia (ovvero quando clicchi su Edit), 
-  // carichiamo i suoi dati nel form
   useEffect(() => {
     if (bookP) {
       setFormData({
@@ -30,30 +27,28 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
         genre: bookP.genre || '',
         ISBN: bookP.ISBN || '',
         publisher: bookP.publisher || '',
-        available: bookP.available !== false,
         description: bookP.description || '',
         language: bookP.language || '',
-        cover: bookP.cover || ''
+        cover: bookP.cover || '',
+        copiesNumber: bookP.copiesNumber || 0,
       });
     }
   }, [bookP]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   async function handleSubmit(e) {
     e.preventDefault();
-    
-    // Richiama la funzione passata dal padre (App.js)
-    // book._id è l'id del libro che stiamo modificando
-    await onUpdate(bookP._id, formData); 
-    
-    onHide(); // Chiude il modal dopo l'operazione
+    const updatedData = {
+      ...formData,
+      copiesNumber: Number(formData.copiesNumber),
+      available: Number(formData.copiesNumber) > 0 
+    };
+    await onUpdate(bookP._id, updatedData); 
+    onHide(); 
   }
 
   return (
@@ -63,127 +58,50 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
       </Modal.Header>
       <Modal.Body className="px-4">
         <Form onSubmit={handleSubmit}>
+          
+          {/* RIGA 1 & 2: Rimangono larghe e divise in 3 (occupano tutto il modal) */}
           <Row>
-            {/* Titolo e Autore */}
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Titolo</Form.Label>
-                <Form.Control 
-                  name="title" 
-                  value={formData.title} 
-                  onChange={handleChange} 
-                />
-              </Form.Group>
-            </Col>
-
-            <Col md={6}>
-                <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Autore</Form.Label>
-                <Form.Control 
-                  name="author"
-                  value={formData.author}
-                  onChange={handleChange}
-                />
-                </Form.Group>
-            </Col>
+            <Col md={4}><Form.Group className="mb-3"><Form.Label className="fw-bold small">Titolo</Form.Label><Form.Control name="title" value={formData.title} onChange={handleChange} /></Form.Group></Col>
+            <Col md={4}><Form.Group className="mb-3"><Form.Label className="fw-bold small">Autore</Form.Label><Form.Control name="author" value={formData.author} onChange={handleChange} /></Form.Group></Col>
+            <Col md={4}><Form.Group className="mb-3"><Form.Label className="fw-bold small">Editore</Form.Label><Form.Control name="publisher" value={formData.publisher} onChange={handleChange} /></Form.Group></Col>
           </Row>
 
           <Row>
-            {/* Anno (max 4 cifre) e Genere */}
-            <Col md={4}>
-            <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Anno di Pubblicazione</Form.Label>
-                <Form.Control 
-                  name="publicationYear"
-                  onInput={(e) => e.target.value = e.target.value.slice(0, 4)}
-                  value={formData.publicationYear}
-                  onChange={handleChange}
-                />
-            </Form.Group>
+            <Col md={4}><Form.Group className="mb-3"><Form.Label className="fw-bold small">Anno Pubblicazione</Form.Label><Form.Control name="publicationYear" type="number" onInput={(e) => e.target.value = e.target.value.slice(0, 4)} value={formData.publicationYear} onChange={handleChange}/></Form.Group></Col>
+            <Col md={4}><Form.Group className="mb-3"><Form.Label className="fw-bold small">Genere</Form.Label><Form.Select name="genre" value={formData.genre} onChange={handleChange}>{genres.map(g => <option key={g} value={g}>{g}</option>)}</Form.Select></Form.Group></Col>
+            <Col md={4}><Form.Group className="mb-3"><Form.Label className="fw-bold small">Lingua</Form.Label><Form.Select name="language" value={formData.language} onChange={handleChange}>{languages.map(l => <option key={l} value={l}>{l}</option>)}</Form.Select></Form.Group></Col>
+          </Row>
+
+          {/* RIGA 3: ISBN e COPIE accorciati (md=8 totale invece di 12) */}
+          <Row>
+            <Col md={8}> 
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold small">Codice ISBN</Form.Label>
+                    <Form.Control name="ISBN" value={formData.ISBN} onChange={handleChange} onInput={(e) => e.target.value = e.target.value.slice(0, 13)} />
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold small">Copie Disponibili</Form.Label>
+                    <Form.Control type="number" name="copiesNumber" min="0" value={formData.copiesNumber} onChange={handleChange} />
+                  </Form.Group>
+                </Col>
+              </Row>
             </Col>
+            {/* Il restante spazio (md=4) rimane vuoto, "accorciando" visivamente i due campi sopra */}
+          </Row>
 
-            <Col md={4}>
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Genere</Form.Label>
-                <Form.Select 
-                  name="genre" 
-                  required 
-                  value={formData.genre} 
-                  onChange={handleChange}
-                >             
-                  <option value="" hidden>Seleziona genere...</option>
-                  {genres.map(g => <option key={g} value={g}>{g}</option>)}
-                </Form.Select>
-              </Form.Group>
-            </Col>
-
-
-            <Col md={4}>
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Lingua</Form.Label>
-                <Form.Select 
-                  name="language" 
-                  required 
-                  value={formData.language} 
-                  onChange={handleChange}
-                >
-                  <option value="" hidden disabled>Seleziona lingua...</option>
-                  {languages.map(l => <option key={l} value={l}>{l}</option>)}
-                </Form.Select>
-              </Form.Group>
-            </Col>
-        </Row>
-
-        <Row>
-            {/* ISBN (max 13 cifre) e Editore */}
-            <Col md={6}>
-            <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Codice ISBN</Form.Label>
-                <Form.Control 
-                  name="ISBN"
-                  onInput={(e) => e.target.value = e.target.value.slice(0, 13)}
-                  value={formData.ISBN}
-                  onChange={handleChange}
-                />
-            </Form.Group>
-            </Col>
-            <Col md={6}>
-            <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Editore</Form.Label>
-                <Form.Control 
-                  name="publisher"
-                  value={formData.publisher}
-                  onChange={handleChange}
-                />
-            </Form.Group>
-            </Col>
-        </Row>
-
-        <Form.Group className="mb-3">
-            <Form.Label className="fw-bold">Descrizione</Form.Label>
-            <Form.Control 
-              as="textarea" rows={3}
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-            />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-            <Form.Check 
-                type="switch"
-                id="available-switch"
-                label="Disponibile"
-                name="available"
-                checked={formData.available}
-                onChange={handleChange}
-                className="fw-bold text-success"
-            />
-        </Form.Group>
+          {/* RIGA 4: Descrizione (torna larga) */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-bold small">Descrizione</Form.Label>
+            <Form.Control as="textarea" rows={3} name="description" value={formData.description} onChange={handleChange} style={{ resize: 'none' }} />
+          </Form.Group>
           
           <div className="d-flex justify-content-end gap-2 mt-4">
             <Button variant="outline-secondary" onClick={onHide} className="px-4 rounded-pill">Annulla</Button>
-            <Button variant="warning" type="submit" onClick={onUpdate} className="px-4 rounded-pill fw-bold text-white">Aggiorna</Button>
+            <Button variant="warning" type="submit" className="px-4 rounded-pill fw-bold text-white">Aggiorna</Button>
           </div>
         </Form>
       </Modal.Body>
