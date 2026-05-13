@@ -9,45 +9,56 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
     }
   };
 
+    // Stile comune per i bottoni per mantenerli identici
+  const buttonStyle = {
+    borderRadius: '5px',
+    fontWeight: '800',
+    padding: '10px 30px',
+    borderWidth: '2px',
+    borderColor: '#e190b6',
+    color: '#e190b6',
+    textTransform: 'uppercase',
+    whiteSpace: 'nowrap' // Impedisce al testo di andare a capo
+  };
+
+
 
   return (
     <header className="bg-white" style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
       
       {/* 1. BANNER ALTO (Full Width) */}
-      <Container fluid className="px-4">
+      <Container fluid className="px-5">
         <Row className="align-items-center g-0" style={{ minHeight: '120gipx'}}>
-            {/* Colonna Logo: prende quasi tutto lo spazio (10 su 12) */}
-          {/* Colonna LOGO: Prende 11 spazi su 12! */}
-          <Col xs={10} md={11}> 
+          <Col xs={8} md={9}> 
             <img 
-              src="/IMG_1647.PNG" 
-              alt="Online Library" 
+              src="/IMG_1650.PNG" 
+              alt="Topinibrary" 
               style={{ 
                 width: '100%',      // Forza il logo a allargarsi su tutta la colonna
                 height: 'auto', 
-                maxHeight: '180px',  // Alza questo valore per farlo diventare "cicciotto"
+                maxHeight: '145px',  // Alza questo valore per farlo diventare "cicciotto"
                 objectFit: 'contain',
                 objectPosition: 'left' // Tiene il logo attaccato a sinistra
               }} 
             />
           </Col>
 
-          {/* Destra: Bottone Login */}
-          <Col xs={2} md={1} className="text-end">
+          {/* Destra: Bottone Login e area registrata*/}
+          <Col xs={4} md={3} className="d-flex justify-content-end align-items-center gap-3">
+
+            <Button 
+              variant="outline-primary" 
+              style={buttonStyle}
+              onClick={() => console.log("Area Riservata cliccata")}
+              >
+              AREA RISERVATA
+            </Button>
+
             <Button 
               variant="outline-primary" 
               onClick = {onShowLogin}
-              style={{ 
-                borderRadius: '5px', 
-                fontWeight: '800', 
-                padding: '10px 30px',
-                borderWidth: '2px',
-                borderColor: '#e190b6',
-                color: '#e190b6',
-                textTransform: 'uppercase'
-                
-              }}
-            >
+              style={buttonStyle}
+              >
               LOGIN
             </Button>
           </Col>
@@ -59,7 +70,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
            <Container fluid className="px-0"> 
           {/* flex-row e w-100 mantengono tutto sulla stessa linea senza collassare */}
             <div className="nav w-100 d-flex flex-row justify-content-around text-center">              {/* Le voci ora occupano spazio equo e sono "cicciotte" */}
-              {['HOME', 'CATALOGO', 'SERVIZI', 'CONTATTACI', 'ORARI'].map((item) => (
+              {['HOME', 'CATALOGO', 'CONTATTACI', 'ORARI'].map((item) => (
                 <a 
                   key={item}
                   onClick={(e) => {
@@ -72,8 +83,15 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
                     onShowHome();
                   }
 
-                  if (item === 'ORARI') scrollToSection('orari-section');
-                  if (item === 'CONTATTACI') scrollToSection('contatti-section');
+                  if (item === 'ORARI') {
+                    e.preventDefault();
+                    scrollToSection('orari-section');
+                  }
+
+                  if (item === 'CONTATTACI'){
+                    e.preventDefault();
+                    scrollToSection('contatti-section');
+                  } 
 
                 }}
                 
