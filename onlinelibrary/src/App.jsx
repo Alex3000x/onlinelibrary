@@ -29,7 +29,13 @@ function App() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false); // Per il modal di conferma eliminazione
   const [bookToDelete, setBookToDelete] = useState(null); // Per tenere traccia del libro che vogliamo eliminare
-
+  // Stato per tenere traccia dell'utente loggato
+  const [currentUser, setCurrentUser] = useState(() => {
+    // Al caricamento, controlla se c'è un utente nel localStorage
+    const savedUser = localStorage.getItem("user");
+    // Se esiste lo trasformo in oggetto, altrimenti null
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   // Funzione per mostrare il catalogo (resettando la ricerca)
   const handleShowCatalog = () => {
@@ -119,6 +125,25 @@ const handleUpdateClick = (book) => {
   setShowUpdateModal(true);
 };
 
+const handleLogout = () => {
+    // 1. Reset dello stato React
+    setCurrentUser(null);
+    
+    // 2. Rimozione dati dal browser
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+    
+    // Torna alla home
+    setView("home");
+    console.log("Utente sloggato");
+  };
+
+  const handleLoginSuccess = (userData) => {
+    // Aggiorna lo stato globale con i dati dell'utente
+    setCurrentUser(userData);
+  };
+
   const [showAddModal, setShowAddModal] = useState(false); // Per il modal di aggiunta libro  
 
   const [showLoginModal, setShowLoginModal] = useState(false); // Per il modal di login
@@ -159,7 +184,13 @@ const handleUpdateClick = (book) => {
   return (
     <>
       {/* Header e SearchBar ora sono liberi di occupare il 100% della larghezza */}
-      <Header onShowCatalog={handleShowCatalog} onShowHome={handleShowHome} onShowLogin={() => setShowLoginModal(true)} />
+      <Header 
+        onShowCatalog={handleShowCatalog} 
+        onShowHome={handleShowHome} 
+        onShowLogin={() => setShowLoginModal(true)} 
+        user={currentUser} // Passa l'utente
+        onLogout={handleLogout} // Passa una funzione per resettare lo stato
+      />
       
       <SearchBar 
         search={search} 
@@ -167,6 +198,8 @@ const handleUpdateClick = (book) => {
         criteria={criteria} 
         setCriteria={setCriteria} 
         setView={setView}
+        // Passiamo il booleano isAdmin (se currentUser è null, sarà false)
+        isAdmin={currentUser?.isAdmin || false}
         onShowAddModal={() => setShowAddModal(true)} // Passa la funzione per mostrare il modal di aggiuntaq
       />
       
@@ -185,10 +218,11 @@ const handleUpdateClick = (book) => {
             <Books  
               searchTerm={search} 
               searchCriteria={criteria} 
-              allBooks={allBooks} // Passalo se serve al componente
               onShowDetail={handleShowDetail}
               onDelete={handleOpenDeleteModal}
               onUpdate={handleUpdateClick}
+              // Passiamo il booleano isAdmin (se currentUser è null, sarà false)
+              isAdmin={currentUser?.isAdmin || false}
             />
         </Container>
 
@@ -219,6 +253,7 @@ const handleUpdateClick = (book) => {
         show={showLoginModal} 
         onHide={() => setShowLoginModal(false)} 
         onSwitchToRegister={switchToRegister} 
+        onLoginSuccess={handleLoginSuccess}
       />
 
       <RegisterModal 
