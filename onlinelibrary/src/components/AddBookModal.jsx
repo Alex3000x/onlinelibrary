@@ -9,7 +9,7 @@ function AddBookModal({ show, onHide }) {
     author: '',
     publicationYear: '',
     genre: '',
-    isbn: '',
+    ISBN: '',
     publisher: '',
     available: false,
     description: '',
@@ -49,7 +49,8 @@ function AddBookModal({ show, onHide }) {
             copiesNumber: Number(formData.copiesNumber),
             available: isAvailable,
             // Il campo 'cover' viene costruito dinamicamente usando l'ISBN inserito, sfruttando l'API di Open Library per ottenere la copertina del libro
-            cover: "https://covers.openlibrary.org/b/isbn/" + formData.isbn + "-L.jpg",
+            // magari successivamente si potrebbe ottenere il link direttamente riferendosi al titolo e autore, dato che forse l'ISBN verrà reso non necessario compilarlo nel form
+            cover: "https://covers.openlibrary.org/b/isbn/" + formData.ISBN + "-L.jpg",
           }
         );
         
@@ -169,10 +170,10 @@ function AddBookModal({ show, onHide }) {
                   <Form.Group className="mb-3">
                     <Form.Label className="fw-bold small">Codice ISBN</Form.Label>
                     <Form.Control 
-                      type="number" name="isbn"
+                      type="number" name="ISBN"
                       onInput={(e) => e.target.value = e.target.value.slice(0, 13)}
                       placeholder="Max 13 cifre"
-                      value={formData.isbn} onChange={handleChange}
+                      value={formData.ISBN} onChange={handleChange}
                     />
                   </Form.Group>
                 </Col>
