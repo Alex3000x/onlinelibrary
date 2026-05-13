@@ -1,17 +1,33 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-function LoginModal({ show, onHide, onSwitchToRegister }) {
+function LoginModal({ show, onHide, onSwitchToRegister, onLoginSuccess }) {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
 
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Tentativo Login con:", loginData);
-    // Qui andrà la fetch POST /login
+    // fetch POST /login
+    try {
+        const response = await axios.post("http://localhost:3000/onlinelibrary/login", { email: loginData.email, password: loginData.password });
+        
+        // Salva i dati nel browser
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        // Funzione passata da App.jsx per aggiornare lo stato dell'utente
+        onLoginSuccess(response.data.user); 
+        onHide();
+    } catch (err) {
+        alert(err.response?.data?.error || "Errore durante il login");
+        console.error("Login fallito:", err.response?.data?.error);
+    }
   };
 
   return (
