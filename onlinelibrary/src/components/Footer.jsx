@@ -4,7 +4,7 @@ function Footer() {
   const footerWrapperStyle = {
     backgroundColor: '#e190b6', // Il rosa del bordo esterno
     padding: '40px 20px',
-    marginTop: '40px',
+    marginTop: '10px',
     width: '100vw',
     marginLeft: 'calc(-50vw + 50%)'
   };
@@ -100,7 +100,7 @@ function Footer() {
       
       {/* Copyright fuori dal blocco rosa per un look più pulito */}
       <div className="text-center py-3 text-muted small">
-        &copy; 2026 Biblioteca Online. Tutti i diritti riservati.
+        &copy; 2026 Topinibrary. Tutti i diritti riservati ai Topini 🧀🐀.
       </div>
     </>
   );
