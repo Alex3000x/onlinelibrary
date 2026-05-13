@@ -14,6 +14,7 @@ function AddBookModal({ show, onHide }) {
     available: true,
     description: '',
     language: '',
+    copiesNumber: '',
     cover: ''
   };
 
@@ -43,7 +44,11 @@ function AddBookModal({ show, onHide }) {
           {
             ...formData,
             publicationYear: Number(formData.publicationYear),
-            ISBN: Number(formData.isbn),
+            // Imposta a 1 la disponibilità iniziale di default, più avanti cambiamo quando implementiamo l'inserimento del numero di copie nel modale
+            copiesNumber: 1,
+            // Il campo 'cover' viene costruito dinamicamente usando l'ISBN inserito, sfruttando l'API di Open Library per ottenere la copertina del libro
+            // magari successivamente si potrebbe ottenere il link direttamente riferendosi al titolo e autore, dato che forse l'isbn verrà reso non necessario compilarlo nel form
+            cover: "https://covers.openlibrary.org/b/isbn/" + formData.isbn + "-L.jpg",
           }
         );
         
