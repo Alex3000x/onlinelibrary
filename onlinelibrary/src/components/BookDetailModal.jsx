@@ -58,6 +58,16 @@ function BookDetailModal({ show, onHide, book }) {
                 <Col xs={6}><strong>Anno Pubblicazione:</strong> {book.publicationYear}</Col>
                 <Col xs={6}><strong>ISBN:</strong> {book.ISBN || "N/A"}</Col>
               </Row>
+
+              <Row className="text-muted mt-2">
+                <Col xs={6}>
+                  <strong>Copie disponibili:</strong> 
+                  <span className={`ms-2 ${book.copiesNumber > 0 ? "text-dark" : "text-danger"}`}>
+                    {book.copiesNumber}
+                  </span>
+                </Col>
+              </Row>
+
               <div className="mt-3">
                 <Badge bg="info" className="me-2 p-2">{book.genre}</Badge>
                 <Badge bg="secondary" className="p-2">{book.publisher}</Badge>
