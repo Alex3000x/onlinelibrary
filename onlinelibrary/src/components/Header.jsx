@@ -20,7 +20,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
           {/* Colonna LOGO: Prende 11 spazi su 12! */}
           <Col xs={10} md={11}> 
             <img 
-              src="/5771921865684226457.jpg" 
+              src="/IMG_1647.PNG" 
               alt="Online Library" 
               style={{ 
                 width: '100%',      // Forza il logo a allargarsi su tutta la colonna
