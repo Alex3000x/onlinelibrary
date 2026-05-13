@@ -140,9 +140,9 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
             <Form.Group className="mb-3">
                 <Form.Label className="fw-bold">Codice ISBN</Form.Label>
                 <Form.Control 
-                  name="isbn"
+                  name="ISBN"
                   onInput={(e) => e.target.value = e.target.value.slice(0, 13)}
-                  value={formData.isbn}
+                  value={formData.ISBN}
                   onChange={handleChange}
                 />
             </Form.Group>
