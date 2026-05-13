@@ -181,11 +181,7 @@ const handleUpdateClick = (book) => {
         />
       ) : (
         // Se sto cercando, mostro la griglia filtrata dentro un Container per i margini
-        <Container className="mt-5">
-            <p className="text-secondary">
-                Search term: <strong>{search}</strong> | Criteria: <strong>{criteria}</strong>
-            </p>
-            <hr />
+        <Container className="mt-3">
             <Books  
               searchTerm={search} 
               searchCriteria={criteria} 
