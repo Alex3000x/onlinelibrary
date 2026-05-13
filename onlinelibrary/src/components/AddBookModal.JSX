@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import axios from "axios";
 
@@ -27,6 +27,10 @@ function AddBookModal({ show, onHide }) {
       [name]: type === 'checkbox' ? checked : value
     });
   };
+
+  const genres = ["Fantasy", "Romanzo classico", "Videogiochi", "Cultura orientale", "Arte", "Cucina", "Viaggi", "Storia", "Informatica", "Realismo magico", "Narrativa contemporanea", "Avventura", "Favola", "Psicologia", "Filosofia", "Horror / Sci-Fi", "Scienza", "Business", "Economia", "Poesia / Spiritualità"];
+  const languages = ["Italiano", "Inglese", "Francese", "Tedesco", "Spagnolo", "Russo", "Giapponese", "Norvegese"];
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -130,26 +134,37 @@ function AddBookModal({ show, onHide }) {
                 />
               </Form.Group>
             </Col>
+
             <Col md={4}>
               <Form.Group className="mb-3">
                 <Form.Label className="fw-bold">Genere</Form.Label>
-                <Form.Control 
-                  type="text" name="genre"
-                  placeholder="Es: Fantasy, Sci-Fi"
-                  value={formData.genre} onChange={handleChange}
-                />
+                <Form.Select 
+                  name="genre" 
+                  required 
+                  value={formData.genre} 
+                  onChange={handleChange}
+                >             
+                  <option value="" hidden>Seleziona genere...</option>
+                  {genres.map(g => <option key={g} value={g}>{g}</option>)}
+                </Form.Select>
               </Form.Group>
             </Col>
+
             <Col md={4}>
-               <Form.Group className="mb-3">
+              <Form.Group className="mb-3">
                 <Form.Label className="fw-bold">Lingua</Form.Label>
-                <Form.Control 
-                  type="text" name="language"
-                  placeholder="Es: Italiano"
-                  value={formData.language} onChange={handleChange}
-                />
+                <Form.Select 
+                  name="language" 
+                  required 
+                  value={formData.language} 
+                  onChange={handleChange}
+                >
+                  <option value="" hidden disabled>Seleziona lingua...</option>
+                  {languages.map(l => <option key={l} value={l}>{l}</option>)}
+                </Form.Select>
               </Form.Group>
             </Col>
+            
           </Row>
 
           <Row>
