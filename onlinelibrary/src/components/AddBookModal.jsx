@@ -11,10 +11,10 @@ function AddBookModal({ show, onHide }) {
     genre: '',
     isbn: '',
     publisher: '',
-    available: true,
+    available: false,
     description: '',
     language: '',
-    copiesNumber: '',
+    copiesNumber: 0,
     cover: ''
   };
 
@@ -32,10 +32,11 @@ function AddBookModal({ show, onHide }) {
   const genres = ["Fantasy", "Romanzo classico", "Videogiochi", "Cultura orientale", "Arte", "Cucina", "Viaggi", "Storia", "Informatica", "Realismo magico", "Narrativa contemporanea", "Avventura", "Favola", "Psicologia", "Filosofia", "Horror / Sci-Fi", "Scienza", "Business", "Economia", "Poesia / Spiritualità"];
   const languages = ["Italiano", "Inglese", "Francese", "Tedesco", "Spagnolo", "Russo", "Giapponese", "Norvegese"];
 
-
   async function handleSubmit(e) {
     e.preventDefault();
-
+    // Calcolo automatico della disponibilità in base alle copie
+    const isAvailable = Number(formData.copiesNumber) > 0;
+    
     try {
       console.log("Dati pronti per il server:", formData);
 
@@ -44,10 +45,10 @@ function AddBookModal({ show, onHide }) {
           {
             ...formData,
             publicationYear: Number(formData.publicationYear),
-            // Imposta a 1 la disponibilità iniziale di default, più avanti cambiamo quando implementiamo l'inserimento del numero di copie nel modale
-            copiesNumber: 1,
+            // Impostiamo il numero di copie come numero
+            copiesNumber: Number(formData.copiesNumber),
+            available: isAvailable,
             // Il campo 'cover' viene costruito dinamicamente usando l'ISBN inserito, sfruttando l'API di Open Library per ottenere la copertina del libro
-            // magari successivamente si potrebbe ottenere il link direttamente riferendosi al titolo e autore, dato che forse l'isbn verrà reso non necessario compilarlo nel form
             cover: "https://covers.openlibrary.org/b/isbn/" + formData.isbn + "-L.jpg",
           }
         );
@@ -55,34 +56,18 @@ function AddBookModal({ show, onHide }) {
         setMessage(response.data.message);
         console.log(response.data);
 
-        setFormData({
-          title: '',
-          author: '',
-          publicationYear: '',
-          genre: '',
-          isbn: '',
-          publisher: '',
-          available: true,
-          description: '',
-          language: '',
-          cover: ''
-        });
+        // Reset del form allo stato iniziale
+        setFormData(initialFormState);
 
     } catch (err) {
       console.error(err);
-
       if (err.response?.status === 409) {
-        const error = err.response.data.error;
-
-        setMessage(error);
+        setMessage(err.response.data.error);
       } else if (err.response?.status === 400) {
         const errors = err.response.data.errors;
-
         setMessage(errors.map(e => e.msg).join(", "));
       } else {
-        const error = err.response.data.error;
-
-        setMessage(error);
+        setMessage(err.response?.data?.error || "Errore durante il salvataggio");
       }
     }
     onHide(); // Chiude il modal dopo l'invio
@@ -102,35 +87,46 @@ function AddBookModal({ show, onHide }) {
 
       <Modal.Body className="px-4">
         <Form onSubmit={handleSubmit}>
+          
+          {/* RIGA 1: Titolo - Autore - Editore */}
           <Row>
-            {/* Titolo e Autore */}
-            <Col md={6}>
+            <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Titolo</Form.Label>
+                <Form.Label className="fw-bold small">Titolo</Form.Label>
                 <Form.Control 
                   type="text" name="title" required
-                  placeholder="Inserisci il titolo"
+                  placeholder="Titolo libro"
                   value={formData.title} onChange={handleChange}
                 />
               </Form.Group>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Autore</Form.Label>
+                <Form.Label className="fw-bold small">Autore</Form.Label>
                 <Form.Control 
                   type="text" name="author" required
-                  placeholder="Nome dell'autore"
+                  placeholder="Nome autore"
                   value={formData.author} onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold small">Editore</Form.Label>
+                <Form.Control 
+                  type="text" name="publisher"
+                  placeholder="Casa editrice"
+                  value={formData.publisher} onChange={handleChange}
                 />
               </Form.Group>
             </Col>
           </Row>
 
+          {/* RIGA 2: Anno - Genere - Lingua */}
           <Row>
-            {/* Anno (max 4 cifre) e Genere */}
             <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Anno di Pubblicazione</Form.Label>
+                <Form.Label className="fw-bold small">Anno Pubblicazione</Form.Label>
                 <Form.Control 
                   type="number" name="publicationYear"
                   onInput={(e) => e.target.value = e.target.value.slice(0, 4)}
@@ -139,82 +135,68 @@ function AddBookModal({ show, onHide }) {
                 />
               </Form.Group>
             </Col>
-
             <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Genere</Form.Label>
+                <Form.Label className="fw-bold small">Genere</Form.Label>
                 <Form.Select 
-                  name="genre" 
-                  required 
-                  value={formData.genre} 
-                  onChange={handleChange}
-                >             
-                  <option value="" hidden>Seleziona genere...</option>
+                  name="genre" required 
+                  value={formData.genre} onChange={handleChange}
+                >           
+                  <option value="" hidden>Seleziona...</option>
                   {genres.map(g => <option key={g} value={g}>{g}</option>)}
                 </Form.Select>
               </Form.Group>
             </Col>
-
             <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Lingua</Form.Label>
+                <Form.Label className="fw-bold small">Lingua</Form.Label>
                 <Form.Select 
-                  name="language" 
-                  required 
-                  value={formData.language} 
-                  onChange={handleChange}
+                  name="language" required 
+                  value={formData.language} onChange={handleChange}
                 >
-                  <option value="" hidden disabled>Seleziona lingua...</option>
+                  <option value="" hidden disabled>Seleziona...</option>
                   {languages.map(l => <option key={l} value={l}>{l}</option>)}
                 </Form.Select>
               </Form.Group>
             </Col>
-            
           </Row>
 
+          {/* RIGA 3: ISBN e COPIE (Versione corta md=6) */}
           <Row>
-            {/* ISBN (max 13 cifre) e Editore */}
             <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Codice ISBN</Form.Label>
-                <Form.Control 
-                  type="number" name="isbn"
-                  onInput={(e) => e.target.value = e.target.value.slice(0, 13)}
-                  placeholder="Codice di massimo 13 cifre"
-                  value={formData.isbn} onChange={handleChange}
-                />
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Editore</Form.Label>
-                <Form.Control 
-                  type="text" name="publisher"
-                  placeholder="Nome casa editrice"
-                  value={formData.publisher} onChange={handleChange}
-                />
-              </Form.Group>
+              <Row>
+                <Col xs={8}>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold small">Codice ISBN</Form.Label>
+                    <Form.Control 
+                      type="number" name="isbn"
+                      onInput={(e) => e.target.value = e.target.value.slice(0, 13)}
+                      placeholder="Max 13 cifre"
+                      value={formData.isbn} onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={4}>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold small">Copie</Form.Label>
+                    <Form.Control 
+                      type="number" name="copiesNumber" min="0"
+                      value={formData.copiesNumber} onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
             </Col>
           </Row>
 
+          {/* RIGA 4: Descrizione */}
           <Form.Group className="mb-3">
-            <Form.Label className="fw-bold">Descrizione</Form.Label>
+            <Form.Label className="fw-bold small">Descrizione</Form.Label>
             <Form.Control 
               as="textarea" rows={3} name="description"
               placeholder="Breve trama del libro..."
               value={formData.description} onChange={handleChange}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Check 
-              type="switch"
-              id="available-switch"
-              label="Disponibile"
-              name="available"
-              checked={formData.available}
-              onChange={handleChange}
-              className="fw-bold text-success"
+              style={{ resize: 'none' }}
             />
           </Form.Group>
 
@@ -222,7 +204,7 @@ function AddBookModal({ show, onHide }) {
             <Button variant="outline-secondary" onClick={onHide} className="px-4 rounded-pill">
               Annulla
             </Button>
-            <Button variant="info" type="submit" onClick={handleSubmit} className="px-4 rounded-pill fw-bold text-white">
+            <Button variant="info" type="submit" className="px-4 rounded-pill fw-bold text-white">
               Salva Libro
             </Button>
           </div>
