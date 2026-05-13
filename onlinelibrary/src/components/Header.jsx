@@ -45,6 +45,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
                 borderColor: '#e190b6',
                 color: '#e190b6',
                 textTransform: 'uppercase'
+                
               }}
             >
               LOGIN
@@ -54,7 +55,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
       </Container>
 
       {/* 2. NAVBAR (Full Width e perfettamente allineata) */}
-      <div className="navbar navbar-light bg-light border-top border-bottom p-0" style={{ backgroundColor: '#fdfdfd' }}>
+      <div className="navbar p-0 border-top border-bottom" style={{ backgroundColor: '#e190b6', borderColor: '#e190b6' }}>
            <Container fluid className="px-0"> 
           {/* flex-row e w-100 mantengono tutto sulla stessa linea senza collassare */}
             <div className="nav w-100 d-flex flex-row justify-content-around text-center">              {/* Le voci ora occupano spazio equo e sono "cicciotte" */}
@@ -82,7 +83,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
                   fontWeight: '850', 
                   fontSize: 'clamp(0.6rem, 2.2vw, 1rem)', // Unica aggiunta per non farlo sparire
                   whiteSpace: 'nowrap',
-                  flex: '1'
+                  flex: '1',
                   }}
                 >
                   {item}
