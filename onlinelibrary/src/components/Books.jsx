@@ -5,7 +5,7 @@ import { Row, Col, Container, Badge, Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 
 
-function Books({searchTerm, searchCriteria, allBooks, onShowDetail, onUpdate, onDelete})
+function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, isAdmin})
 {
     console.log("BOOKS()");
 
@@ -123,7 +123,7 @@ function Books({searchTerm, searchCriteria, allBooks, onShowDetail, onUpdate, on
             <Row xs={1} md={2} lg={3} className="g-4"> 
                 {currentBooks.map(b => (
                 <Col key={b._id}>
-                    <Book bookP={b} onShowDetail={onShowDetail} onUpdate={onUpdate} onDelete={onDelete}/>
+                    <Book bookP={b} onShowDetail={onShowDetail} onUpdate={onUpdate} onDelete={onDelete} isAdmin={isAdmin}/>
                 </Col>
                 ))}
             </Row>
