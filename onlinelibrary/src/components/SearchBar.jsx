@@ -1,7 +1,6 @@
 import { Form, InputGroup, Button, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { propTypes } from 'react-bootstrap/esm/Image';
 
-function SearchBar({ search, setSearch, criteria, setCriteria, setView, onShowAddModal  }) {
+function SearchBar({ search, setSearch, criteria, setCriteria, setView, isAdmin, onShowAddModal }) {
   
 
   const backgroundStyle = {
@@ -94,32 +93,35 @@ function SearchBar({ search, setSearch, criteria, setCriteria, setView, onShowAd
               </Button>
 
               {/* Bottone aggiungi libro */}
-              <OverlayTrigger
-                placement="top"
-                // Se vuoi che appaia subito, togli la riga 'delay' qui sotto
-                delay={{ show: 250, hide: 400 }} 
-                overlay={(props) => (
-                <Tooltip id="add-tooltip" {...props}>
-                  Aggiungi nuovo libro
-                </Tooltip>
-                )}
-                >
-                <Button 
-                  variant="info"
-                  className="ms-1"
-                  style={{ 
-                    backgroundColor: '#17a2b8', 
-                    borderColor: '#17a2b8', 
-                    width: '60px', 
-                    fontWeight: '800', 
-                    fontSize: '1.2rem', 
-                    color: 'white' 
-                  }}
-                  onClick={onShowAddModal}
+              {/* Visualizza il tasto solo se l'utente è loggato come admin*/}
+              {isAdmin && (
+                <OverlayTrigger
+                  placement="top"
+                  // Se vuoi che appaia subito, togli la riga 'delay' qui sotto
+                  delay={{ show: 250, hide: 400 }} 
+                  overlay={(props) => (
+                  <Tooltip id="add-tooltip" {...props}>
+                    Aggiungi nuovo libro
+                  </Tooltip>
+                  )}
                   >
-                  +
-                </Button>
-              </OverlayTrigger>
+                  <Button 
+                    variant="info"
+                    className="ms-1"
+                    style={{ 
+                      backgroundColor: '#17a2b8', 
+                      borderColor: '#17a2b8', 
+                      width: '60px', 
+                      fontWeight: '800', 
+                      fontSize: '1.2rem', 
+                      color: 'white' 
+                    }}
+                    onClick={onShowAddModal}
+                    >
+                    +
+                  </Button>
+                </OverlayTrigger>
+              )}
             </InputGroup>
           </Form>
         </div>
