@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 
@@ -15,10 +16,17 @@ function RegisterModal({ show, onHide, onSwitchToLogin }) {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Dati registrazione per il DB:", userData);
-    // Qui andrà la fetch POST /register
+    // fetch POST /register
+    try {
+        const response = await axios.post("http://localhost:3000/onlinelibrary/register", userData);
+        alert(response.data.message);
+        onSwitchToLogin(); // Dopo la registrazione, portalo al login
+    } catch (err) {
+        console.error("Errore durante la registrazione:", err.response?.data?.error);
+    }
   };
 
   return (
@@ -65,7 +73,7 @@ function RegisterModal({ show, onHide, onSwitchToLogin }) {
             <Form.Control type="password" name="password" required value={userData.password} onChange={handleChange} />
           </Form.Group>
           
-          <Button variant="info" type="submit" className="w-100 rounded-pill fw-bold text-white mb-3">
+          <Button variant="info" type="submit" onClick={handleSubmit} className="w-100 rounded-pill fw-bold text-white mb-3">
             Conferma Registrazione
           </Button>
           <div className="text-center text-muted">
