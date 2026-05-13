@@ -1,18 +1,18 @@
 import { Card, Button, Row, Col, Badge } from 'react-bootstrap';
 
 function Book({ bookP, onShowDetail, onUpdate, onDelete }) {
+
   // Funzione per tagliare la descrizione se troppo lunga
   const truncateDescription = (text, maxLength) => {
     if (!text) return "";
     return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
   };
 
-  // Verifichiamo la disponibilità (nel tuo DB il campo potrebbe chiamarsi 'available' o 'availability')
-  // Se non esiste ancora nel DB, per ora usiamo una logica di esempio
+  // Verifichiamo la disponibilità
   const isAvailable = bookP.available !== false; 
 
   return (
-    <Card className="h-100 shadow-sm border-0" style={{ borderRadius: '15px', overflow: 'hidden' }}>
+    <Card className="h-100 shadow-sm border-0" style={{ borderRadius: '15px', overflow: 'hidden', backgroundColor: '#fffbf6' }}>
       <Card.Body>
         <Row>
           {/* SINISTRA: Copertina del libro */}
@@ -80,7 +80,7 @@ function Book({ bookP, onShowDetail, onUpdate, onDelete }) {
                 borderWidth: '2px',
                 fontSize: '0.9rem'
               }}
-              onClick={() => onUpdate(bookP)} // Passa solo l'ID del libro da aggiornare
+              onClick={() => onUpdate(bookP)}
             >
               ✏️
             </Button>
