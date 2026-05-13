@@ -14,6 +14,11 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
     language: '',
     cover: ''
   });
+
+  const genres = ["Fantasy", "Romanzo classico", "Videogiochi", "Cultura orientale", "Arte", "Cucina", "Viaggi", "Storia", "Informatica", "Realismo magico", "Narrativa contemporanea", "Avventura", "Favola", "Psicologia", "Filosofia", "Horror / Sci-Fi", "Scienza", "Business", "Economia", "Poesia / Spiritualità"];
+  const languages = ["Italiano", "Inglese", "Francese", "Tedesco", "Spagnolo", "Russo", "Giapponese", "Norvegese"];
+
+
   // Ogni volta che il 'book' passato come prop cambia (ovvero quando clicchi su Edit), 
   // carichiamo i suoi dati nel form
   useEffect(() => {
@@ -70,6 +75,7 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
                 />
               </Form.Group>
             </Col>
+
             <Col md={6}>
                 <Form.Group className="mb-3">
                 <Form.Label className="fw-bold">Autore</Form.Label>
@@ -95,26 +101,36 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
                 />
             </Form.Group>
             </Col>
+
             <Col md={4}>
-            <Form.Group className="mb-3">
+              <Form.Group className="mb-3">
                 <Form.Label className="fw-bold">Genere</Form.Label>
-                <Form.Control 
-                  name="genre"
-                  value={formData.genre}
+                <Form.Select 
+                  name="genre" 
+                  required 
+                  value={formData.genre} 
                   onChange={handleChange}
-                />
-            </Form.Group>
+                >             
+                  <option value="" hidden>Seleziona genere...</option>
+                  {genres.map(g => <option key={g} value={g}>{g}</option>)}
+                </Form.Select>
+              </Form.Group>
             </Col>
+
+
             <Col md={4}>
-                <Form.Group className="mb-3">
+              <Form.Group className="mb-3">
                 <Form.Label className="fw-bold">Lingua</Form.Label>
-                <Form.Control 
-                  name="language"
-                  placeholder="Es: Italiano"
-                  value={formData.language}
+                <Form.Select 
+                  name="language" 
+                  required 
+                  value={formData.language} 
                   onChange={handleChange}
-                />
-            </Form.Group>
+                >
+                  <option value="" hidden disabled>Seleziona lingua...</option>
+                  {languages.map(l => <option key={l} value={l}>{l}</option>)}
+                </Form.Select>
+              </Form.Group>
             </Col>
         </Row>
 
