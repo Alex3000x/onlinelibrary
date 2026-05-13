@@ -1,6 +1,6 @@
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
-function Header({ onShowCatalog , onShowHome, onShowLogin}) {
+function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout }) {
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -43,7 +43,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
             />
           </Col>
 
-          {/* Destra: Bottone Login e area registrata*/}
+          {/* Destra: bottone Area Riservata e Login/Logout*/}
           <Col xs={4} md={3} className="d-flex justify-content-end align-items-center gap-3">
 
             <Button 
@@ -54,13 +54,24 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
               AREA RISERVATA
             </Button>
 
-            <Button 
-              variant="outline-primary" 
-              onClick = {onShowLogin}
-              style={buttonStyle}
-              >
-              LOGIN
-            </Button>
+            {user ? (
+              <Button 
+                variant="outline-primary" 
+                onClick = {onLogout}
+                style={buttonStyle}
+                >
+                LOGOUT
+              </Button>
+              
+            ) : (
+              <Button 
+                variant="outline-primary" 
+                onClick = {onShowLogin}
+                style={buttonStyle}
+                >
+                LOGIN
+              </Button>
+            )}
           </Col>
         </Row>
       </Container>
@@ -69,7 +80,8 @@ function Header({ onShowCatalog , onShowHome, onShowLogin}) {
       <div className="navbar p-0 border-top border-bottom" style={{ backgroundColor: '#e190b6', borderColor: '#e190b6' }}>
            <Container fluid className="px-0"> 
           {/* flex-row e w-100 mantengono tutto sulla stessa linea senza collassare */}
-            <div className="nav w-100 d-flex flex-row justify-content-around text-center">              {/* Le voci ora occupano spazio equo e sono "cicciotte" */}
+            <div className="nav w-100 d-flex flex-row justify-content-around text-center">         
+              {/* Le voci ora occupano spazio equo e sono "cicciotte" */}     
               {['HOME', 'CATALOGO', 'CONTATTACI', 'ORARI'].map((item) => (
                 <a 
                   key={item}
