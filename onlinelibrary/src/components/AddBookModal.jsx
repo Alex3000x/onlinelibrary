@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import axios from "axios";
 
-function AddBookModal({ show, onHide }) {
+function AddBookModal({ show, onHide, onRefresh }) {
   // Stato iniziale con i nomi dei campi esatti del tuo DB
   const initialFormState = {
     title: '',
@@ -59,6 +59,8 @@ function AddBookModal({ show, onHide }) {
 
         // Reset del form allo stato iniziale
         setFormData(initialFormState);
+        onRefresh(); // Aggiorna la lista dei libri dopo l'aggiunta
+        onHide(); // Chiude il modal dopo l'invio
 
     } catch (err) {
       console.error(err);
