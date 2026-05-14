@@ -1,7 +1,21 @@
 import { Form, InputGroup, Button, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
 
 function SearchBar({ search, setSearch, criteria, setCriteria, setView, isAdmin, onShowAddModal }) {
   
+  // Creiamo uno stato locale per l'input immediato (quello che l'utente vede mentre scrive)
+  const [inputValue, setInputValue] = useState(search);
+
+  // LOGICA DEBOUNCE: Sincronizziamo inputValue con lo stato globale 'search' dopo un delay
+  useEffect(() => {
+    // Se siamo in Home (view non è catalog), forse non vogliamo la ricerca istantanea
+    // Ma se vuoi che funzioni ovunque, lasciamo il timer semplice:
+  const timer = setTimeout(() => {
+      setSearch(inputValue);
+  }, 400); // 400 millisecondi di pausa prima di far partire la ricerca
+
+    return () => clearTimeout(timer); // Puliamo il timer se l'utente preme un altro tasto
+  }, [inputValue, setSearch]);
 
   const backgroundStyle = {
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0)), url("/IMG_1634.JPG")`, 
@@ -18,8 +32,23 @@ function SearchBar({ search, setSearch, criteria, setCriteria, setView, isAdmin,
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSearch(inputValue);
     setSearch(search);
   }
+
+  const translations = {
+    all: "tutto",
+    title: "titolo",
+    author: "autore",
+    publicationYear: "anno",
+    genre: "genere",
+    ISBN: "ISBN",
+    publisher: "editore",
+    language: "lingua"
+  };
+
+  const italianPlaceholder = translations[criteria] || "tutto";
+
 
   return (
     <div style={backgroundStyle}>
@@ -73,11 +102,10 @@ function SearchBar({ search, setSearch, criteria, setCriteria, setView, isAdmin,
                   </Form.Select>
               </div>
 
-              {/* Input di testo (Font più cicciotto) */}
               <Form.Control
-                placeholder={`Cerca per ${criteria}...`}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                placeholder={`Cerca per ${italianPlaceholder}...`}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
                 className="border-0 shadow-none"
                 style={{ fontSize: '1.2rem', fontWeight: '600' }}
               />
