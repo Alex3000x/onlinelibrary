@@ -36,6 +36,8 @@ function App() {
     // Se esiste lo trasformo in oggetto, altrimenti null
     return savedUser ? JSON.parse(savedUser) : null;
   });
+  const [refresh, setRefresh] = useState(0); // Stato per forzare il refresh dei libri dopo operazioni CRUD
+
 
   // Funzione per mostrare il catalogo (resettando la ricerca)
   const handleShowCatalog = () => {
@@ -56,6 +58,8 @@ function App() {
     setShowModal(true);
   };
 
+  const handleRefresh = () => setRefresh(prev => prev + 1); // Funzione per forzare il refresh dei libri dopo operazioni CRUD
+
   const handleDelete = async (bookId) => {
     try {
         console.log("Tentativo di eliminazione libro con ID:", bookId);
@@ -65,6 +69,8 @@ function App() {
 
         setMessage(response.data.message);
         console.log(response.data);
+
+        handleRefresh(); 
 
         // Aggiorna lo stato per rimuovere il libro dalla UI istantaneamente
         setAllBooks(prevBooks => prevBooks.filter(book => book._id !== bookId));
@@ -89,7 +95,9 @@ function App() {
     ...updatedFormData,
     publicationYear: Number(updatedFormData.publicationYear),
     ISBN: Number(updatedFormData.ISBN),
+    copiesNumber: Number(updatedFormData.copiesNumber),
   });
+    handleRefresh(); // Aggiorna la lista dei libri dopo l'aggiornamento
 
     console.log("Risposta server:", response.data);
 
@@ -104,7 +112,9 @@ function App() {
       );
       setMessage(response.data.message);
     } else {
+      handleRefresh();
       setMessage("Libro aggiornato, ma non ho ricevuto i dati aggiornati dal server.");
+      
     }
   } catch (err) {
     console.error(err);
@@ -223,6 +233,7 @@ const handleLogout = () => {
               onUpdate={handleUpdateClick}
               // Passiamo il booleano isAdmin (se currentUser è null, sarà false)
               isAdmin={currentUser?.isAdmin || false}
+              refresh={refresh} // Passa lo stato di refresh per forzare il ricaricamento dopo operazioni CRUD
             />
         </Container>
 
@@ -240,6 +251,7 @@ const handleLogout = () => {
       <AddBookModal
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
+        onRefresh={handleRefresh} // Passa la funzione per aggiornare la lista dopo l'aggiunta
       />
 
       <UpdateBookModal
@@ -247,6 +259,7 @@ const handleLogout = () => {
         onHide={() => setShowUpdateModal(false)}
         bookP={bookToUpdate}
         onUpdate={handleUpdate}
+        onRefresh={handleRefresh} // Passa la funzione per aggiornare la lista dopo l'aggiornamento
       />
 
       <LoginModal 
