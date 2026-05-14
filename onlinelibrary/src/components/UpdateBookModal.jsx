@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 
-function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
+function UpdateBookModal({ show, onHide, bookP, onUpdate, onRefresh }) {
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -48,7 +48,8 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate }) {
       available: Number(formData.copiesNumber) > 0 
     };
     await onUpdate(bookP._id, updatedData); 
-    onHide(); 
+    onRefresh(); // Aggiorna la lista dei libri dopo l'aggiornamento
+    onHide(); // Chiude il modal dopo l'invio
   }
 
   return (
