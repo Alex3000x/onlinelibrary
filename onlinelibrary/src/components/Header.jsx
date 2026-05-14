@@ -31,7 +31,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout }) {
         <Row className="align-items-center g-0" style={{ minHeight: '120gipx'}}>
           <Col xs={8} md={9}> 
             <img 
-              src="/IMG_1650.PNG" 
+              src="/IMG_1655.PNG" 
               alt="Topinibrary" 
               style={{ 
                 width: '100%',      // Forza il logo a allargarsi su tutta la colonna
