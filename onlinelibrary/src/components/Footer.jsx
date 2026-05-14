@@ -41,20 +41,20 @@ function Footer() {
         <Container>
           <Row className="g-4"> {/* g-4 aggiunge spazio tra le colonne */}
             
-            {/* 1. LA BIBLIOTECA */}
             <Col md={4}>
-              <div style={cardStyle}>
-                <h4 style={titleStyle}>La Biblioteca</h4>
-                <ul style={listStyle}>
-                  <li><a href="#history" className="text-decoration-none text-muted">La nostra storia</a></li>
-                  <li><a href="#staff" className="text-decoration-none text-muted">Lo Staff</a></li>
-                  <li><a href="#volunteer" className="text-decoration-none text-muted">Diventa Volontario</a></li>
-                  <li><a href="#work" className="text-decoration-none text-muted">Lavora con noi</a></li>
-                  <li><a href="#newsletter" className="text-decoration-none text-muted">Iscriviti alla Newsletter</a></li>
-                </ul>
+              <div style={{ ...cardStyle, padding: '10px', overflow: 'hidden' }}>
+                <img 
+                  src="/IMG_1658.PNG" 
+                  alt="Mascotte Topinibrary" 
+                  style={{ 
+                    width: '100%',      
+                    height: 'auto', 
+                    maxHeight: '370px', // Più alto per farlo bello grande nel footer
+                    objectFit: 'contain'
+                  }} 
+                />
               </div>
             </Col>
-
             {/* 2. ORARI */}
             <Col md={4}>
               <div style={cardStyle}>
