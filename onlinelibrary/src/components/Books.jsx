@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Book from "./Book";
-import { Row, Col, Container, Badge, Form } from "react-bootstrap";
+import { Row, Col, Container, Badge, Form, Spinner } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 
 
@@ -25,6 +25,8 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
             try
             {
                 setLoading(true);
+                // Aggiungiamo un piccolo delay artificiale di 500ms per mostrare lo spinner (opzionale)
+                await new Promise(resolve => setTimeout(resolve, 500));
 
                 const response = await axios.get("http://localhost:3000/onlinelibrary/books?" + searchCriteria + "=" + searchTerm);
 
@@ -48,7 +50,7 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
 
         fetchBooks();
 
-    }, [searchTerm, searchCriteria]); 
+    }, [searchTerm, searchCriteria, refresh]); 
 
     const sortedBooks = [...books].sort((a, b) => {
         if (sortBy === "title") return (a.title || "").localeCompare(b.title || "");
@@ -78,16 +80,28 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
     function onRefresh() {
         setRefresh(refresh + 1);
     }
-
-
-    if(loading)
-        return <p>Loading...</p>
     
     if(err)
         return <p>{err.message}</p>
 
     return (
-    <Container>
+    <Container className="position-relative">
+            {/* SPINNER: Appare sopra la lista quando loading è true */}
+            {loading && (
+                <div className="d-flex justify-content-center align-items-center" 
+                     style={{ position: 'absolute', top: '100px', left: 0, right: 0, zIndex: 10 }}>
+                    <Spinner animation="border" variant="info" style={{ width: '3rem', height: '3rem' }} />
+                </div>
+            )}
+
+        {/* AVVOLGIAMO TUTTO IN UN DIV CON OPACITÀ VARIABILE.
+              Se loading è true, diventa trasparente al 50% ma NON sparisce.*/}
+            <div style={{ 
+                opacity: loading ? 0.5 : 1, 
+                transition: 'opacity 0.3s ease-in-out', // Transizione dolce
+                pointerEvents: loading ? 'none' : 'auto' // Impedisce click mentre carica
+            }}>
+     
             {/* BARRA DELLO STATO: Contatore e Ordinamento */}
             <div className="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded shadow-sm">
 
@@ -166,6 +180,7 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
                     </Button>
                 </div>
             )}
+            </div>
         </Container>
         );
     }
