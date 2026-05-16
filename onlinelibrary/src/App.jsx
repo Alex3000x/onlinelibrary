@@ -198,6 +198,9 @@ const handleLogout = () => {
         onShowHome={handleShowHome} 
         onShowLogin={() => setShowLoginModal(true)} 
         user={currentUser} // Passa l'utente
+        onShowProfileModal={() => alert("Apertura modale profilo in arrivo!")}
+        onShowSecurityModal={() => alert("Apertura modale sicurezza in arrivo!")}
+        onShowAdminPanel={() => alert("Apertura pannello admin utenti in arrivo!")}
         onLogout={handleLogout} // Passa una funzione per resettare lo stato
       />
       
