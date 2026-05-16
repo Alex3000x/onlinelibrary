@@ -9,7 +9,7 @@ const avatarStyle = {
   cursor: 'pointer'
 };
 
-function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onShowProfileModal, onShowSecurityModal, onShowAdminPanel }) {
+function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onShowProfileModal, onShowSecurityModal, onShowAdminPanel, onShowFavouritesPanel }) {
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -112,7 +112,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
                   </Dropdown.Item>
                   
                   {/* 3. I MIEI PREFERITI (Collegamento vuoto temporaneo) */}
-                  <Dropdown.Item className="py-2 rounded small text-muted">
+                  <Dropdown.Item onClick={onShowFavouritesPanel} className="py-2 rounded small text-muted">
                     ❤️ I Miei Preferiti (coming soon)
                   </Dropdown.Item>
 

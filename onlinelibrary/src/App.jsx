@@ -201,6 +201,7 @@ const handleLogout = () => {
         onShowProfileModal={() => alert("Apertura modale profilo in arrivo!")}
         onShowSecurityModal={() => alert("Apertura modale sicurezza in arrivo!")}
         onShowAdminPanel={() => alert("Apertura pannello admin utenti in arrivo!")}
+        onShowFavouritesPanel={() => alert("Questa funzionalità è in arrivo! Stay tuned!")}
         onLogout={handleLogout} // Passa una funzione per resettare lo stato
       />
       
