@@ -82,7 +82,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout }) {
           {/* flex-row e w-100 mantengono tutto sulla stessa linea senza collassare */}
             <div className="nav w-100 d-flex flex-row justify-content-around text-center">         
               {/* Le voci ora occupano spazio equo e sono "cicciotte" */}     
-              {['HOME', 'CATALOGO', 'CONTATTACI', 'ORARI'].map((item) => (
+              {['HOME', 'CATALOGO', 'ORARI', 'CONTATTACI'].map((item) => (
                 <a 
                   key={item}
                   onClick={(e) => {
@@ -94,16 +94,16 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout }) {
                     e.preventDefault();
                     onShowHome();
                   }
-
-                  if (item === 'ORARI') {
-                    e.preventDefault();
-                    scrollToSection('orari-section');
-                  }
-
+                  
                   if (item === 'CONTATTACI'){
                     e.preventDefault();
                     scrollToSection('contatti-section');
                   } 
+                  
+                  if (item === 'ORARI') {
+                    e.preventDefault();
+                    scrollToSection('orari-section');
+                  }
 
                 }}
                 
