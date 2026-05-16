@@ -70,10 +70,9 @@ function App() {
         setMessage(response.data.message);
         console.log(response.data);
 
-        handleRefresh(); 
-
         // Aggiorna lo stato per rimuovere il libro dalla UI istantaneamente
         setAllBooks(prevBooks => prevBooks.filter(book => book._id !== bookId));
+        handleRefresh();
 
     } catch (err) {
         console.error(err);

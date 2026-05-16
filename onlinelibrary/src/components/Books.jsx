@@ -5,12 +5,11 @@ import { Row, Col, Container, Badge, Form, Spinner } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 
 
-function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, isAdmin})
+function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, isAdmin, refresh})
 {
     console.log("BOOKS()");
 
     const [books, setBooks] = useState([]);
-    const [refresh, setRefresh] = useState(0);
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState(null);
     // Cambiato il default da "title" a "default" per seguire l'ordine del DB all'avvio
@@ -77,10 +76,6 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
     activeNumber: '#e190b6' // Colore del numero pagina corrente
     };
 
-    function onRefresh() {
-        setRefresh(refresh + 1);
-    }
-    
     if(err)
         return <p>{err.message}</p>
 
