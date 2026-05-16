@@ -348,8 +348,13 @@ app.post("/onlinelibrary/login", async (req, res, next) => {
             refreshToken,
             user: {
                 firstName: user.firstName,
+                lastName: user.lastName,
+                dateOfBirth: user.dateOfBirth,
+                email: user.email,
+                password: user.password,
                 username: user.username,
-                isAdmin: user.isAdmin
+                isAdmin: user.isAdmin,
+                createdAt: user.createdAt
             }
         });
 
