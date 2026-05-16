@@ -175,6 +175,7 @@ app.post("/onlinelibrary/books", /*verifyToken,*/ async (req, res, next) => {
         available: req.body.available,
         description: req.body.description,
         language: req.body.language,
+        copiesNumber: Number(req.body.copiesNumber),
         cover: req.body.cover};
 
         const book = await booksCollection.insertOne(newBook);
@@ -242,6 +243,7 @@ app.put("/onlinelibrary/books/:id", /*verifyToken,*/ async (req, res, next) => {
             available: req.body.available,
             description: req.body.description,
             language: req.body.language,
+            copiesNumber: Number(req.body.copiesNumber),
             cover: req.body.cover
         };
 
