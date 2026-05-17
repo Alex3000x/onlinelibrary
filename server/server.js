@@ -173,9 +173,9 @@ app.post("/onlinelibrary/books", verifyToken, async (req, res, next) => {
         const newBook = {
             title: req.body.title,
             author: req.body.author,
-            publicationYear: Number(req.body.publicationYear),
+            publicationYear: (isNaN(Number(req.body.publicationYear)) || Number(req.body.publicationYear) <= 0) ? null : Number(req.body.publicationYear),
             genre: req.body.genre,
-            ISBN: Number(req.body.ISBN),
+            ISBN: req.body.ISBN ? req.body.ISBN.toString().trim() : "", // assicura che l'ISBN sia una stringa se non fornito
             publisher: req.body.publisher,
             available: req.body.available,
             description: req.body.description,
@@ -251,9 +251,9 @@ app.put("/onlinelibrary/books/:id", verifyToken, async (req, res, next) => {
         const updatedBook = {
             title: req.body.title,
             author: req.body.author,
-            publicationYear: Number(req.body.publicationYear),
+            publicationYear: (isNaN(Number(req.body.publicationYear)) || Number(req.body.publicationYear) <= 0) ? null : Number(req.body.publicationYear),
             genre: req.body.genre,
-            ISBN: Number(req.body.ISBN),
+            ISBN: req.body.ISBN ? req.body.ISBN.toString().trim() : "", // assicura che l'ISBN sia una stringa se non fornito
             publisher: req.body.publisher,
             available: req.body.available,
             description: req.body.description,
