@@ -9,6 +9,7 @@ function LoginModal({ show, onHide, onSwitchToRegister, onLoginSuccess }) {
 
   useEffect(() => {
       setShowPassword(false);
+      setLoginData({ email: '', password: '' });
     }, [show]);
 
   const handleChange = (e) => {

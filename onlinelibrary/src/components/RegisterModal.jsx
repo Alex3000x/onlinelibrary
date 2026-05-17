@@ -17,6 +17,14 @@ function RegisterModal({ show, onHide, onSwitchToLogin }) {
 
   useEffect(() => {
     setShowPassword(false);
+    setUserData({
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      username: '',
+      email: '',
+      password: ''
+    });
   }, [show]);
 
   const handleChange = (e) => {
