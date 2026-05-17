@@ -51,6 +51,9 @@ function AddBookModal({ show, onHide, onRefresh }) {
             // Il campo 'cover' viene costruito dinamicamente usando l'ISBN inserito, sfruttando l'API di Open Library per ottenere la copertina del libro
             // magari successivamente si potrebbe ottenere il link direttamente riferendosi al titolo e autore, dato che forse l'ISBN verrà reso non necessario compilarlo nel form
             cover: "https://covers.openlibrary.org/b/isbn/" + formData.ISBN + "-L.jpg",
+          },
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
           }
         );
         

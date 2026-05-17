@@ -163,20 +163,25 @@ app.get("/onlinelibrary/books/:id", async (req, res, next) => {
 // POST /onlinelibrary/books - Add a new book to the library
 app.post("/onlinelibrary/books", verifyToken, async (req, res, next) => {
     try {
+        // BLOCCO DI SICUREZZA: Impedisce l'accesso agli utenti non admin
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ error: "Accesso negato. Solo gli amministratori possono aggiungere libri." });
+        }
+
         const booksCollection = db.collection("books");
 
         const newBook = {
-        title: req.body.title,
-        author: req.body.author,
-        publicationYear: Number(req.body.publicationYear),
-        genre: req.body.genre,
-        ISBN: Number(req.body.ISBN),
-        publisher: req.body.publisher,
-        available: req.body.available,
-        description: req.body.description,
-        language: req.body.language,
-        copiesNumber: Number(req.body.copiesNumber),
-        cover: req.body.cover};
+            title: req.body.title,
+            author: req.body.author,
+            publicationYear: Number(req.body.publicationYear),
+            genre: req.body.genre,
+            ISBN: Number(req.body.ISBN),
+            publisher: req.body.publisher,
+            available: req.body.available,
+            description: req.body.description,
+            language: req.body.language,
+            copiesNumber: Number(req.body.copiesNumber),
+            cover: req.body.cover};
 
         const book = await booksCollection.insertOne(newBook);
 
@@ -198,6 +203,11 @@ app.post("/onlinelibrary/books", verifyToken, async (req, res, next) => {
 // DELETE /onlinelibrary/books/69fcd5014141996a9fbeaa28 - Remove a book from the library by its _id
 app.delete("/onlinelibrary/books/:id", verifyToken, async (req, res, next) => {
     try {
+        // BLOCCO DI SICUREZZA
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ error: "Accesso negato. Solo gli amministratori possono eliminare libri." });
+        }
+
         const booksCollection = db.collection("books");
         const { id } = req.params; // Estrae l'ID dall'URL
 
@@ -230,6 +240,11 @@ app.delete("/onlinelibrary/books/:id", verifyToken, async (req, res, next) => {
 // PUT /onlinelibrary/books/69fcd5014141996a9fbeaa28 - Update the details of a book by its _id
 app.put("/onlinelibrary/books/:id", verifyToken, async (req, res, next) => {
     try {
+        // BLOCCO DI SICUREZZA
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ error: "Accesso negato. Solo gli amministratori possono modificare libri." });
+        }
+
         const booksCollection = db.collection("books");
         const { id } = req.params; // Estrae l'ID dall'URL
 

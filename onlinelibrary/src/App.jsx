@@ -68,7 +68,9 @@ function App() {
         console.log("Tentativo di eliminazione libro con ID:", bookId);
 
         // Chiamata DELETE coerente con la tua handleSubmit
-        const response = await axios.delete(`http://localhost:3000/onlinelibrary/books/${bookId}`);
+        const response = await axios.delete(`http://localhost:3000/onlinelibrary/books/${bookId}`, {
+                                  headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
+                                });
 
         setMessage(response.data.message);
         console.log(response.data);
@@ -98,7 +100,11 @@ function App() {
     publicationYear: Number(updatedFormData.publicationYear),
     ISBN: Number(updatedFormData.ISBN),
     copiesNumber: Number(updatedFormData.copiesNumber),
-  });
+    }, 
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
+    }
+  );
     handleRefresh(); // Aggiorna la lista dei libri dopo l'aggiornamento
 
     console.log("Risposta server:", response.data);
