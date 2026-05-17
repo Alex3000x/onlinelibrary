@@ -1,14 +1,5 @@
 import { Container, Row, Col, Button, Dropdown, Badge } from 'react-bootstrap';
 
-const avatarStyle = {
-  width: '45px',
-  height: '45px',
-  borderRadius: '50%',
-  objectFit: 'cover',
-  border: '2px solid #e190b6',
-  cursor: 'pointer'
-};
-
 function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onShowProfileModal, onShowSecurityModal, onShowAdminPanel, onShowFavouritesPanel }) {
 
   const scrollToSection = (id) => {
@@ -18,7 +9,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
     }
   };
 
-    // Stile comune per i bottoni per mantenerli identici
+  // Stile comune per i bottoni per mantenerli identici
   const buttonStyle = {
     borderRadius: '5px',
     fontWeight: '800',
@@ -30,20 +21,23 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
     whiteSpace: 'nowrap' // Impedisce al testo di andare a capo
   };
 
-  // Formattazione della data di iscrizione (Punto 1 degli appunti)
-  // const formatRegistrationDate = (dateString) => {
-  //   if (!dateString) return "N/A";
-  //   const date = new Date(dateString);
-  //   return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  // };
+  // Stile per l'avatar dell'utente
+  const avatarStyle = {
+    width: '45px',
+    height: '45px',
+    borderRadius: '50%',
+    objectFit: 'cover',
+    border: '2px solid #e190b6',
+    cursor: 'pointer'
+  };
 
   return (
     <header className="bg-white" style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
       
       {/* 1. BANNER ALTO (Full Width) */}
       <Container fluid className="px-3">
-        <Row className="align-items-center g-0" style={{ minHeight: '120px'}}>
-          <Col xs={8} md={9}> 
+        <Row className="align-items-center gx-3 g-0-y" style={{ minHeight: '120px', width: '100%' }}>
+          <Col xs={7} md={9}> 
             <img 
               src="/IMG_1655.PNG" 
               alt="Topinibrary" 
@@ -60,20 +54,28 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
           </Col>
 
           {/* SEZIONE LOGIN / LOGGATO */}
-          <Col xs={4} md={3} className="d-flex justify-content-end align-items-center">
+          <Col xs={5} md={3} className="d-flex justify-content-end align-items-center" style={{ minWidth: 0 }}>
             {user ? (
               /* PANNELLO DI CONTROLLO UTENTE A COMPARSA */
-              <Dropdown align="end">
-                <Dropdown.Toggle variant="link" id="dropdown-user-profile" className="text-decoration-none d-flex text-dark align-items-center gap-2 p-0 shadow-none">
-                  {/* Informazioni affianco all'icona (Nome o Username) */}
-                  Benvenutə
-                  <span className="d-md-inline d-md-text-truncate fw-bold">
+              <Dropdown align="end" style={{ maxWidth: '100%', minWidth: 0 }}>
+                <Dropdown.Toggle variant="link" id="dropdown-user-profile" className="text-decoration-none d-flex text-dark align-items-center gap-2 p-0 shadow-none" style={{ maxWidth: '100%', minWidth: 0 }}>
+                  {/* Informazioni affianco all'icona (Benvenutə username) */}
+                  <span className="d-none d-sm-inline text-muted me-1">Benvenutə</span>
+                  <span 
+                    className="d-inline-block text-truncate fw-bold align-middle" 
+                    style={{ 
+                      maxWidth: '80px', 
+                      flexShrink: 1,
+                      minWidth: 0 
+                    }} 
+                    title={user.username} // mostra tooltip completo al passaggio del mouse sopra
+                  >
                     {user.username}
                   </span>
                   <img 
                     src={user.avatarUrl || "https://cdn-icons-png.flaticon.com/512/1144/1144760.png"} 
                     alt="Avatar" 
-                    style={avatarStyle}
+                    style={{...avatarStyle, flexShrink: 0}} // impedisce all'avatar di rimpicciolirsi se lo spazio stringe
                   />
                 </Dropdown.Toggle>
 
@@ -103,7 +105,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
                   
                   {/* 1. PERSONALIZZAZIONE PROFILO */}
                   <Dropdown.Item onClick={onShowProfileModal} className="pt-0 py-2 rounded small">
-                    ⚙️ Personalizza profilo
+                    👤 Personalizza profilo
                   </Dropdown.Item>
                   
                   {/* 2. GESTIONE ACCOUNT & SICUREZZA */}
@@ -143,7 +145,6 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
                 variant="outline-secondary" 
                 style={buttonStyle}
                 className="py-2 rounded fw-bold text-center border border-danger-subtle rounded-pill mt-2"
-                    Logout
                 onClick={onShowLogin}
               >
                 Login
