@@ -1,9 +1,15 @@
 import axios from 'axios';
-import { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Modal, Button, Form, InputGroup } from 'react-bootstrap';
+import { BsEye, BsEyeSlash } from 'react-icons/bs';
 
 function LoginModal({ show, onHide, onSwitchToRegister, onLoginSuccess }) {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+      setShowPassword(false);
+    }, [show]);
 
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -46,10 +52,23 @@ function LoginModal({ show, onHide, onSwitchToRegister, onLoginSuccess }) {
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label className="fw-bold">Password</Form.Label>
-            <Form.Control 
-              type="password" name="password" placeholder="********" required
-              value={loginData.password} onChange={handleChange}
-            />
+            <InputGroup>
+              <Form.Control 
+                type={showPassword ? "text" : "password"} 
+                name="password" // <--- Fondamentale per far funzionare il tuo handleChange!
+                placeholder="********" 
+                required
+                value={loginData.password} 
+                onChange={handleChange}
+              />
+              <Button 
+                variant="outline-secondary" 
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ display: 'flex', alignItems: 'center', borderColor: '#ced4da' }}
+              >
+                {showPassword ? <BsEyeSlash size={18} /> : <BsEye size={18} />}
+              </Button>
+            </InputGroup>
           </Form.Group>
           <Button variant="info" type="submit" className="w-100 rounded-pill fw-bold text-white mb-3">
             Entra
