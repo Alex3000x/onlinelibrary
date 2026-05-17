@@ -14,6 +14,9 @@ import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
 import axios from 'axios';
 import DeleteConfirmModal from './components/DeleteConfirmModal';
+import ProfileModal from './components/ProfileModal';
+import SecurityModal from './components/SecurityModal';
+import AdminUsersModal from './components/AdminUsersModal';
 
 
 function App() {
@@ -157,6 +160,9 @@ const handleLogout = () => {
 
   const [showLoginModal, setShowLoginModal] = useState(false); // Per il modal di login
   const [showRegisterModal, setShowRegisterModal] = useState(false); // Per il modal di registrazione 
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showSecurityModal, setShowSecurityModal] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
 
   // Funzioni "Switch" per passare da uno all'altro
   const switchToRegister = () => {
@@ -198,10 +204,11 @@ const handleLogout = () => {
         onShowHome={handleShowHome} 
         onShowLogin={() => setShowLoginModal(true)} 
         user={currentUser} // Passa l'utente
-        onShowProfileModal={() => alert("Apertura modale profilo in arrivo!")}
-        onShowSecurityModal={() => alert("Apertura modale sicurezza in arrivo!")}
+        onShowProfileModal={() => setShowProfileModal(true)}
+        onShowSecurityModal={() => setShowSecurityModal(true)}
         onShowAdminPanel={() => alert("Apertura pannello admin utenti in arrivo!")}
         onShowFavouritesPanel={() => alert("Questa funzionalità è in arrivo! Stay tuned!")}
+        onShowAdminPanel={() => setShowAdminModal(true)} // <--- COLLEGAMENTO INTERFACCIA ADMIN
         onLogout={handleLogout} // Passa una funzione per resettare lo stato
       />
       
@@ -278,6 +285,29 @@ const handleLogout = () => {
         onSwitchToLogin={switchToLogin} 
       />
 
+      <ProfileModal
+        show={showProfileModal}
+        onHide={() => setShowProfileModal(false)}
+        user={currentUser}
+        onUpdateSuccess={(updatedUser) => setCurrentUser(updatedUser)} // Aggiorna lo stato nel padre
+      />
+
+      {/* MODALE SICUREZZA ACCOUNT */}
+      <SecurityModal
+        show={showSecurityModal}
+        onHide={() => setShowSecurityModal(false)}
+        user={currentUser}
+        onLogout={handleLogout} // Passa la tua funzione di logout esistente
+        onUpdateSuccess={(updatedUser) => setCurrentUser(updatedUser)} // Aggiorna lo stato nel padre
+
+      />
+
+      {/* MODALE AREA RISERVATA ADMIN */}
+      <AdminUsersModal
+        show={showAdminModal}
+        onHide={() => setShowAdminModal(false)}
+        currentUser={currentUser}
+      />
 
       <DeleteConfirmModal 
         show={showDeleteModal} 
