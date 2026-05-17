@@ -294,6 +294,7 @@ app.post("/onlinelibrary/register", async (req, res, next) => {
             lastName: req.body.lastName,
             dateOfBirth: req.body.dateOfBirth,
             username: req.body.username,
+            avatarUrl: req.body.avatarUrl || "https://cdn-icons-png.flaticon.com/512/1144/1144760.png", // Imposta un avatar di default se non fornito
             email: req.body.email,
             password: hashedPassword,
             isAdmin: false, // chi si registra all'inizio non è mai admin
@@ -332,13 +333,13 @@ app.post("/onlinelibrary/login", async (req, res, next) => {
 
         // Crea i due token
         const accessToken = jwt.sign(
-            { id: user._id, email: user.email, isAdmin: user.isAdmin },
+            { id: user._id.toString(), email: user.email, isAdmin: user.isAdmin },
             ACCESS_SECRET,
             { expiresIn: "15m" }
         );
 
         const refreshToken = jwt.sign(
-            { id: user._id },
+            { id: user._id.toString() },
             REFRESH_SECRET,
             { expiresIn: "7d" }
         );
@@ -347,9 +348,12 @@ app.post("/onlinelibrary/login", async (req, res, next) => {
             accessToken,
             refreshToken,
             user: {
+                id: user._id.toString(),
                 firstName: user.firstName,
                 lastName: user.lastName,
                 dateOfBirth: user.dateOfBirth,
+                username: user.username,
+                avatarUrl: user.avatarUrl,
                 email: user.email,
                 password: user.password,
                 username: user.username,
@@ -386,6 +390,185 @@ app.post("/onlinelibrary/refresh", async (req, res, next) => {
     }
 });
 
+// ==========================================
+// 1. UTENTI LOGGATI: AGGIORNAMENTO PROFILO
+// ==========================================
+app.put("/onlinelibrary/users/:id", verifyToken, async (req, res, next) => {
+    try {
+        // Sicurezza: Un utente standard può modificare SOLO il proprio profilo
+        if (req.user.id !== req.params.id && !req.user.isAdmin) {
+            return res.status(403).json({ error: "Accesso negato. Non puoi modificare questo profilo." });
+        }
+
+        const usersCollection = db.collection("users");
+        const userId = new ObjectId(req.params.id);
+
+        const updateData = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            dateOfBirth: req.body.dateOfBirth,
+            username: req.body.username,
+            avatarUrl: req.body.avatarUrl // Il nuovo campo per l'immagine
+        };
+
+        const result = await usersCollection.updateOne(
+            { _id: userId },
+            { $set: updateData }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: "Utente non trovato" });
+        }
+
+        res.json({ message: "Profilo aggiornato con successo" });
+    } catch (err) {
+        next(err);
+    }
+});
+
+// ==========================================
+// 2. UTENTI LOGGATI: MODIFICA INDIRIZZO EMAIL
+// ==========================================
+app.patch("/onlinelibrary/users/:id/email", verifyToken, async (req, res, next) => {
+    try {
+        if (req.user.id !== req.params.id) {
+            return res.status(403).json({ error: "Non autorizzato." });
+        }
+
+        const { newEmail, confirmPassword } = req.body;
+        const usersCollection = db.collection("users");
+        const userId = new ObjectId(req.params.id);
+
+        // 1. Cerca l'utente nel DB per verificare la password
+        const user = await usersCollection.findOne({ _id: userId });
+        if (!user) return res.status(404).json({ error: "Utente non trovato" });
+
+        // 2. Controllo password tramite bcrypt
+        const isPasswordCorrect = await bcrypt.compare(confirmPassword, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(401).json({ error: "Password di conferma errata" });
+        }
+
+        // 3. Controllo se la nuova email è già usata da qualcun altro
+        const emailExists = await usersCollection.findOne({ email: newEmail });
+        if (emailExists) {
+            return res.status(409).json({ error: "Questo indirizzo email è già in uso" });
+        }
+
+        // 4. Aggiorna l'email
+        await usersCollection.updateOne({ _id: userId }, { $set: { email: newEmail } });
+
+        res.json({ message: "Email aggiornata con successo" });
+    } catch (err) {
+        next(err);
+    }
+});
+
+// ==========================================
+// 3. UTENTI LOGGATI: CAMBIO PASSWORD
+// ==========================================
+app.patch("/onlinelibrary/users/:id/password", verifyToken, async (req, res, next) => {
+    try {
+        if (req.user.id !== req.params.id) {
+            return res.status(403).json({ error: "Non autorizzato." });
+        }
+
+        const { current, new: newPassword } = req.body;
+        const usersCollection = db.collection("users");
+        const userId = new ObjectId(req.params.id);
+
+        const user = await usersCollection.findOne({ _id: userId });
+        if (!user) return res.status(404).json({ error: "Utente non trovato" });
+
+        // Verifica vecchia password
+        const isPasswordCorrect = await bcrypt.compare(current, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(401).json({ error: "La password attuale è errata" });
+        }
+
+        // Hash della nuova password
+        const salt = await bcrypt.genSalt(10);
+        const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+
+        // Salva nel DB
+        await usersCollection.updateOne({ _id: userId }, { $set: { password: hashedNewPassword } });
+
+        res.json({ message: "Password aggiornata con successo" });
+    } catch (err) {
+        next(err);
+    }
+});
+
+// ==========================================
+// 4. UTENTI LOGGATI: ELIMINAZIONE ACCOUNT
+// ==========================================
+app.delete("/onlinelibrary/users/:id", verifyToken, async (req, res, next) => {
+    try {
+        if (req.user.id !== req.params.id && !req.user.isAdmin) {
+            return res.status(403).json({ error: "Azione non autorizzata." });
+        }
+
+        const usersCollection = db.collection("users");
+        const result = await usersCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: "Utente non trovato" });
+        }
+
+        res.json({ message: "Account eliminato definitivamente" });
+    } catch (err) {
+        next(err);
+    }
+});
+
+// ==========================================================
+// 5. AREA RISERVATA ADMIN: GET TUTTI GLI UTENTI
+// ==========================================================
+app.get("/onlinelibrary/users", verifyToken, async (req, res, next) => {
+    try {
+        // BLOCCO DI SICUREZZA: Solo chi ha isAdmin nel token può passare
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ error: "Accesso negato. Area riservata agli amministratori." });
+        }
+
+        const usersCollection = db.collection("users");
+        
+        // Estraiamo tutti gli utenti ma ESCLUDIAMO il campo password per sicurezza
+        const allUsers = await usersCollection.find({}, { projection: { password: 0 } }).toArray();
+
+        res.json(allUsers);
+    } catch (err) {
+        next(err);
+    }
+});
+
+// ==========================================================
+// 6. AREA RISERVATA ADMIN: CAMBIO RUOLO UTENTE (SWITCH)
+// ==========================================================
+app.patch("/onlinelibrary/admin/users/:id/role", verifyToken, async (req, res, next) => {
+    try {
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ error: "Accesso negato." });
+        }
+
+        const usersCollection = db.collection("users");
+        const userId = new ObjectId(req.params.id);
+
+        // Impedisci all'admin di declassare se stesso dall'interfaccia
+        if (req.user.id === req.params.id) {
+            return res.status(400).json({ error: "Non puoi revocare i permessi admin a te stesso." });
+        }
+
+        await usersCollection.updateOne(
+            { _id: userId },
+            { $set: { isAdmin: req.body.isAdmin } }
+        );
+
+        res.json({ message: "Ruolo utente aggiornato correttamente" });
+    } catch (err) {
+        next(err);
+    }
+});
 
 // 404 handler for unmatched routes
 app.use((req, res, next) => {
