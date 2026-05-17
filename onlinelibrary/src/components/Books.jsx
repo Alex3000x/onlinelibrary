@@ -52,10 +52,12 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
     }, [searchTerm, searchCriteria, refresh]); 
 
     const sortedBooks = [...books].sort((a, b) => {
+        // Se è "default", non applichiamo nessun ordinamento (mantiene l'ordine del DB)
+        if (sortBy === "newest_added") return (b._id || "").localeCompare(a._id || "");
         if (sortBy === "title") return (a.title || "").localeCompare(b.title || "");
         if (sortBy === "author") return (a.author || "").localeCompare(b.author || "");
-        if (sortBy === "publicationYear") return b.publicationYear - a.publicationYear;
-        // Se è "default", non applichiamo nessun ordinamento (mantiene l'ordine del DB)
+        if (sortBy === "year_desc") return b.publicationYear - a.publicationYear;
+        if (sortBy === "year_asc") return a.publicationYear - b.publicationYear;
         return 0;
     });
 
@@ -111,10 +113,12 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
                             setCurrentPage(1); // Torna alla pagina 1 quando cambi ordinamento
                         }}
                     >
-                        <option value="default">In Evidenza (Default)</option>
+                        <option value="default">In evidenza</option>
+                        <option value="newest_added">Ultime aggiunte</option>
                         <option value="title">Titolo</option>
                         <option value="author">Autore</option>
-                        <option value="publicationYear">Anno (Recenti)</option>
+                        <option value="year_desc">Più recenti</option>
+                        <option value="year_asc">Meno recenti</option>
                     </Form.Select>
                 </div>
 
