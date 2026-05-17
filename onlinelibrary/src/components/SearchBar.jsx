@@ -83,11 +83,13 @@ function SearchBar({ search, setSearch, criteria, setCriteria, setView, isAdmin,
                   <Form.Select 
                       value={criteria}
                       onChange={(e) => setCriteria(e.target.value)}
-                      className="border-0 shadow-none p-0"
+                      className="border-0 shadow-none p-0 ps-2"
                       style={{ 
                           fontWeight: '700', 
                           fontSize: '1.1rem', 
                           width: '130px',
+                          paddingLeft: '8px',
+                          textIndent: '5px',
                           cursor: 'pointer' 
                       }}
                   >
