@@ -11,6 +11,13 @@ function BookDetailModal({ show, onHide, book }) {
     }
   };
 
+  // Funzione per ripulire le stringhe e mettere N/A se vuote o mancanti
+  const renderText = (value) => {
+    if (value === undefined || value === null) return "N/A";
+    const trimmed = String(value).trim();
+    return trimmed === "" ? "N/A" : trimmed;
+  };
+
   return (
     <Modal 
       show={show} 
@@ -39,8 +46,8 @@ function BookDetailModal({ show, onHide, book }) {
           <Col md={7}>
             <div className="d-flex justify-content-between align-items-start mb-2">
               <div>
-                <h2 className="fw-bold mb-0">{book.title}</h2>
-                <h5 className="text-secondary">by {book.author}</h5>
+                <h2 className="fw-bold mb-0">{renderText(book.title)}</h2>
+                <h5 className="text-secondary">by {renderText(book.author)}</h5>
               </div>
               <Badge pill bg={book.available !== false ? "success" : "danger"} className="p-2 px-3">
                 {book.available !== false ? "DISPONIBILE" : "NON DISPONIBILE"}
@@ -49,28 +56,28 @@ function BookDetailModal({ show, onHide, book }) {
 
             <div className="mt-4 p-3 bg-light rounded shadow-sm">
               <p className="mb-0 italic" style={{ fontSize: '1.05rem', lineHeight: '1.6' }}>
-                {book.description}
+                {renderText(book.description)}
               </p>
             </div>
 
             <div className="mt-4 border-top pt-3">
               <Row className="text-muted">
-                <Col xs={6}><strong>Anno Pubblicazione:</strong> {book.publicationYear}</Col>
-                <Col xs={6}><strong>ISBN:</strong> {book.ISBN || "N/A"}</Col>
+                <Col xs={6}><strong>Anno Pubblicazione:</strong> {renderText(book.publicationYear)}</Col>
+                <Col xs={6}><strong>ISBN:</strong> {renderText(book.ISBN) || "N/A"}</Col>
               </Row>
 
               <Row className="text-muted mt-2">
                 <Col xs={6}>
                   <strong>Copie disponibili:</strong> 
-                  <span className={`ms-2 ${book.copiesNumber > 0 ? "text-dark" : "text-danger"}`}>
-                    {book.copiesNumber}
+                  <span className={`ms-2 ${renderText(book.copiesNumber) > 0 ? "text-dark" : "text-danger"}`}>
+                    {renderText(book.copiesNumber)}
                   </span>
                 </Col>
               </Row>
 
               <div className="mt-3">
-                <Badge bg="info" className="me-2 p-2">{book.genre}</Badge>
-                <Badge bg="secondary" className="p-2">{book.publisher}</Badge>
+                <Badge bg="info" className="me-2 p-2">{renderText(book.genre)}</Badge>
+                <Badge bg="secondary" className="p-2">{renderText(book.publisher)}</Badge>
               </div>
             </div>
           </Col>
