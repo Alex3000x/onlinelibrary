@@ -37,6 +37,25 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
     cursor: 'pointer'
   };
 
+  // Stile personalizzato per resettare il blu attivo e aggiungere l'hover alle voci
+  const dropdownItemStyle = {
+    color: '#1f1612',
+    transition: 'background-color 0.15s ease',
+    backgroundColor: 'transparent'
+  };
+
+  // Questo elimina il blu attivo di Bootstrap e aggiunge un hover grigio chiaro nativo a tutte le voci
+  if (typeof document !== 'undefined') {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .dropdown-item-custom:hover { background-color: #eff0f0 !important; color: #a74175 !important; }
+      .dropdown-item-custom:active, .dropdown-item-custom.active { background-color: #eff0f0 !important; color: #a74175 !important; }
+      .dropdown-item-custom-area:hover { background-color: #efb9b9 !important; color: #dc3545 !important; }
+
+    `;
+    document.head.appendChild(style);
+  }
+
   return (
     <header className="bg-white" style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
       
@@ -110,17 +129,29 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
                   </div> */}
                   
                   {/* 1. PERSONALIZZAZIONE PROFILO */}
-                  <Dropdown.Item onClick={onShowProfileModal} className="pt-0 py-2 rounded small">
+                  <Dropdown.Item 
+                    onClick={onShowProfileModal} 
+                    className="pt-0 py-2 rounded small text-dark dropdown-item-custom"
+                    style={dropdownItemStyle}
+                  >
                     👤 Personalizza profilo
                   </Dropdown.Item>
                   
                   {/* 2. GESTIONE ACCOUNT & SICUREZZA */}
-                  <Dropdown.Item onClick={onShowSecurityModal} className="py-2 rounded small">
+                  <Dropdown.Item 
+                    onClick={onShowSecurityModal} 
+                    className="py-2 rounded small text-dark dropdown-item-custom"
+                    style={dropdownItemStyle}
+                  >
                     🔒 Gestione account & Sicurezza
                   </Dropdown.Item>
-                  
-                  {/* 3. I MIEI PREFERITI (Collegamento vuoto temporaneo) */}
-                  <Dropdown.Item onClick={onShowFavouritesPanel} className="py-2 rounded small text-muted">
+
+                  {/* 3. I MIEI PREFERITI */}
+                  <Dropdown.Item 
+                    onClick={onShowFavouritesPanel} 
+                    className="py-2 rounded small text-muted dropdown-item-custom"
+                    style={{ ...dropdownItemStyle, color: '#6c757d' }}
+                  >
                     ❤️ I Miei Preferiti (coming soon)
                   </Dropdown.Item>
 
@@ -128,10 +159,11 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
                   {user.isAdmin && (
                     <>
                       <Dropdown.Divider className="my-2" />
-                      {/* <div className="px-2 py-1 small text-uppercase text-muted fw-bold" style={{ fontSize: '0.65rem' }}>
-                        Amministrazione
-                      </div> */}
-                      <Dropdown.Item onClick={onShowAdminPanel} className="py-1 rounded small text-danger fw-bold bg-light-danger text-center">
+                      <Dropdown.Item 
+                        onClick={onShowAdminPanel} 
+                        className="py-1 rounded small text-danger fw-bold bg-light-danger text-center dropdown-item-custom-area"
+                        style={{ transition: 'background-color 0.15s ease' }}
+                      >
                         🔑 AREA RISERVATA
                       </Dropdown.Item>
                     </>
