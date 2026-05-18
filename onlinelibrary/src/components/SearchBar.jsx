@@ -53,27 +53,24 @@ function SearchBar({ search, setSearch, criteria, setCriteria, setView, isAdmin,
   return (
     <div style={backgroundStyle}>
       <Container>
-        {/* Titolo (Font più cicciotto) */}
-        <h2 style={{ 
-            fontWeight: '800', 
-            marginBottom: '30px', 
-            fontSize: '2.5rem', 
-            color: '#1f1612',
-            WebkitTextStroke: '#f8f2d0 1px', 
+
+        {/* Titolo */}
+        <h2 style={{
+          fontFamily: "'Fredoka One', cursive",
+          fontSize: "2rem",
+          letterSpacing: "0.5px",
+          background: "rgba(248,242,208, 0.6)",
+          color: "#a74175",
+          backdropFilter: "blur(4px)",
+          padding: "6px 24px",
+          borderRadius: "50px",
+          display: "inline-block",
             
-            // // Background e Bordi
-            // backgroundColor: 'rgba(197, 202, 198, 0.5)', // Nero al 50% di opacità
-            // borderRadius: '15px',                // Angoli arrotondati
-            // padding: '10px 20px',                // Spazio interno (sopra/sotto e destra/sinistra)
-            
-            // // Layout
-            // display: 'inline-block',             // Serve a far sì che il fondo segua la scritta e non occupi tutta la riga
-            // marginBottom: '30px',
           }}>
           Che libro stai cercando?
         </h2>
 
-        <div className="mx-auto" style={{ maxWidth: '900px' }}>
+        <div className="mx-auto" style={{ maxWidth: '800px' }}>
           <Form onSubmit={handleSubmit}>
             <InputGroup className="bg-white shadow-lg p-1" style={{ borderRadius: '5px' }}>
               
