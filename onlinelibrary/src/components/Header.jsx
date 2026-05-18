@@ -64,7 +64,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
         <Row className="align-items-center gx-3 g-0-y" style={{ minHeight: '120px', width: '100%' }}>
           <Col xs={7} md={9}> 
             <img 
-              src="/222.png" 
+              src="/IMG_1672.PNG" 
               alt="Topinibrary" 
               onClick={onShowHome}
               style={{ 
