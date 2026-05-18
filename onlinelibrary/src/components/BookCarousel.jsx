@@ -36,6 +36,11 @@ function BookCarousel({ title, books, onShowDetail }) {
                 src={book.cover} 
                 alt={book.title} 
                 className="img-fluid shadow-lg mb-3"
+                // AGGIUNTA: Se l'immagine nel carosello è corrotta, scatta il paracadute locale
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/IMG_16663.PNG";
+                }}
                 style={{ 
                   borderRadius: '5px', 
                   height: '350px', 

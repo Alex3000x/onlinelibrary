@@ -17,7 +17,12 @@ function Book({ bookP, onShowDetail, onUpdate, onDelete, isAdmin }) {
           {/* SINISTRA: Copertina del libro */}
           <Col xs={5}>
             <img 
-              src={bookP.cover} 
+              // CONTROLLO: Se l'ISBN non esiste, è vuoto o è "N/A", usa subito l'immagine locale.
+              // Altrimenti, se c'è un'immagine salvata o l'url, usa quello.
+              src={(bookP.ISBN && bookP.ISBN !== "N/A" && bookP.ISBN.trim() !== "") 
+                ? (bookP.cover || "/IMG_16663.PNG") 
+                : "/IMG_16663.PNG"
+              } 
               alt={bookP.title}
               className="img-fluid"
               style={{ 

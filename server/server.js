@@ -30,6 +30,48 @@ const verifyToken = (req, res, next) => {
     }
 };
 
+// Funzione helper aggiornata per verificare la validità del campo cover o generarlo dall'ISBN se non valido
+async function checkOpenLibraryCover(coverUrl, isbn) {
+    let finalUrl = coverUrl ? coverUrl.toString().trim() : "";
+    const cleanISBN = isbn ? isbn.toString().trim() : "";
+
+    // Se il campo cover è vuoto ma abbiamo un ISBN valido, proviamo a comporre l'URL di OpenLibrary
+    if (finalUrl === "" && cleanISBN !== "" && cleanISBN !== "N/A") {
+        finalUrl = `https://covers.openlibrary.org/b/isbn/${cleanISBN}-L.jpg`;
+    }
+
+    // Se dopo questo controllo non abbiamo ancora nessun URL valido o c'è già il fallback, restituisci il locale
+    if (finalUrl === "" || finalUrl === "/IMG_16663.PNG") {
+        return "/IMG_16663.PNG";
+    }
+
+    // Se l'URL non appartiene a OpenLibrary (è un link esterno inserito a mano), lo consideriamo valido d'ufficio
+    if (!finalUrl.includes("openlibrary.org")) {
+        return finalUrl;
+    }
+
+    try {
+        // Eseguiamo una fetch sul server di OpenLibrary per esaminare l'immagine reale restituita
+        const response = await fetch(finalUrl);
+        if (!response.ok) return "/IMG_16663.PNG";
+
+        // Convertiamo la risposta in arrayBuffer per leggerne il peso reale in byte
+        const arrayBuffer = await response.arrayBuffer();
+        const bufferSize = arrayBuffer.byteLength;
+
+        // Se l'immagine pesa meno di 100 byte, si tratta del pixel trasparente vuoto 1x1 di OpenLibrary
+        if (bufferSize < 100) {
+            return "/IMG_16663.PNG";
+        }
+
+        // Se supera il controllo, restituisce l'URL della copertina reale verificata
+        return finalUrl;
+    } catch (error) {
+        console.error("Errore durante il controllo della copertina:", error);
+        return "/IMG_16663.PNG"; // In caso di crash o timeout di rete, paracadute locale sicuro
+    }
+}
+
 app.use(express.json());
 app.use(cors()); // abilita CORS per tutte le rotte
 
@@ -122,7 +164,7 @@ app.get("/topinibrary/books", async (req, res, next) => {
 // GET /topinibrary/books/1984 - Retrieve a book by its title
 app.get("/topinibrary/books/:title", async (req, res, next) => {
     try {
-        const booksCollection = db.collection("books");
+        const_booksCollection = db.collection("books");
 
         //2. case tolerant  
         const filter = {
@@ -170,6 +212,9 @@ app.post("/topinibrary/books", verifyToken, async (req, res, next) => {
 
         const booksCollection = db.collection("books");
 
+        // MODIFICATO: Esegue il controllo reale sui byte del campo cover inviato dal frontend prima di procedere
+        const validatedCover = await checkOpenLibraryCover(req.body.cover, req.body.ISBN);
+
         const newBook = {
             title: req.body.title,
             author: req.body.author,
@@ -181,7 +226,7 @@ app.post("/topinibrary/books", verifyToken, async (req, res, next) => {
             description: req.body.description,
             language: req.body.language,
             copiesNumber: Number(req.body.copiesNumber),
-            cover: req.body.cover};
+            cover: validatedCover};
 
         const book = await booksCollection.insertOne(newBook);
 
@@ -213,7 +258,7 @@ app.delete("/topinibrary/books/:id", verifyToken, async (req, res, next) => {
 
         console.log("ID da eliminare:", id);
 
-        // Trasforma la stringa in un vero ObjectId di MongoDB, perché nel database l'ID è memorizzato come ObjectId, non come stringa
+        // Trasforma la stringa in un vero ObjectId di MongoDB, perché nel database l'ID è memorizzato como ObjectId, non come stringa
         const deletedBook = await booksCollection.deleteOne({ _id: new ObjectId(id) });
 
         if (deletedBook.deletedCount === 0) {
@@ -242,11 +287,14 @@ app.put("/topinibrary/books/:id", verifyToken, async (req, res, next) => {
     try {
         // BLOCCO DI SICUREZZA
         if (!req.user.isAdmin) {
-            return res.status(403).json({ error: "Accesso negato. Solo gli amministratori possono modificare libri." });
+            return res.status(403).json({ error: "Accesso negato. Solo gli amministratori possono modify libri." });
         }
 
         const booksCollection = db.collection("books");
         const { id } = req.params; // Estrae l'ID dall'URL
+
+        // MODIFICATO: Esegue il controllo preventivo dei byte sulla cover inviata, ricalcolando l'immagine se l'ISBN o la cover sono variati
+        const validatedCover = await checkOpenLibraryCover(req.body.cover, req.body.ISBN);
 
         const updatedBook = {
             title: req.body.title,
@@ -259,7 +307,7 @@ app.put("/topinibrary/books/:id", verifyToken, async (req, res, next) => {
             description: req.body.description,
             language: req.body.language,
             copiesNumber: Number(req.body.copiesNumber),
-            cover: req.body.cover
+            cover: validatedCover
         };
 
         const book = await booksCollection.findOneAndUpdate(
