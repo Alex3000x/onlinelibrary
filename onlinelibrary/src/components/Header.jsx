@@ -1,6 +1,10 @@
+import { useState } from 'react'; // Importato lo stato per gestire l'effetto hover sul login
 import { Container, Row, Col, Button, Dropdown, Badge } from 'react-bootstrap';
 
 function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onShowProfileModal, onShowSecurityModal, onShowAdminPanel, onShowFavouritesPanel }) {
+
+  // Stato per controllare se il cursore è sopra il bottone di Login
+  const [isLoginHovered, setIsLoginHovered] = useState(false);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -133,7 +137,7 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
 
                   <Dropdown.Divider className="my-2 pb-2" />
                   
-                  {/* 5. TASTO LOGOUT (In fondo per facile arrivo) */}
+                  {/* 5. TASTO LOGOUT (In fondo per facile arrivals) */}
                   <Dropdown.Item onClick={onLogout} className="py-2 pt-1 rounded small text-danger fw-bold text-center border border-danger-subtle rounded-pill">
                     Logout
                   </Dropdown.Item>
@@ -142,10 +146,20 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
               </Dropdown>
             ) : (
               <Button 
-                variant="outline-secondary" 
-                style={buttonStyle}
-                className="py-2 rounded fw-bold text-center border border-danger-subtle rounded-pill mt-2"
+                variant="none" 
                 onClick={onShowLogin}
+                onMouseEnter={() => setIsLoginHovered(true)}
+                onMouseLeave={() => setIsLoginHovered(false)}
+                className="py-2 fw-bold text-center mt-2"
+                style={{
+                  ...buttonStyle,
+                  borderRadius: '50rem', // Mantiene la forma a pillola (rounded-pill)
+                  borderStyle: 'solid',
+                  borderColor: '#e190b6', // Forza il bordo a rimanere sempre rosa
+                  backgroundColor: isLoginHovered ? '#e190b6' : 'transparent',
+                  color: isLoginHovered ? '#ffffff' : '#e190b6',
+                  transition: 'background-color 0.2s ease, color 0.2s ease'
+                }}
               >
                 Login
               </Button>
@@ -186,12 +200,13 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
                 }}
                 
                 href={item === 'CATALOGO' ? "#" : `#${item.toLowerCase()}`}
-                  className="nav-link text-dark py-3"
+                  className="nav-link py-3"
                   style={{ 
                   fontWeight: '850', 
                   fontSize: 'clamp(0.6rem, 2.2vw, 1rem)', // Unica aggiunta per non farlo sparire
                   whiteSpace: 'nowrap',
                   flex: '1',
+                  color: '#fffced'
                   }}
                 >
                   {item}
