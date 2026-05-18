@@ -17,6 +17,11 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
     const [currentPage, setCurrentPage] = useState(1);
     const booksPerPage = 12; // Quanti libri vuoi per pagina
 
+    // Reset della pagina a 1 ad ogni nuova ricerca o cambio criterio
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, searchCriteria]);
+
     useEffect(() => {
 
         async function fetchBooks()
@@ -92,7 +97,7 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
             )}
 
         {/* AVVOLGIAMO TUTTO IN UN DIV CON OPACITÀ VARIABILE.
-              Se loading è true, diventa trasparente al 50% ma NON sparisce.*/}
+             Se loading è true, diventa trasparente al 50% ma NON sparisce.*/}
             <div style={{ 
                 opacity: loading ? 0.5 : 1, 
                 transition: 'opacity 0.3s ease-in-out', // Transizione dolce
