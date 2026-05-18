@@ -31,7 +31,7 @@ function ProfileModal({ show, onHide, user, onUpdateSuccess }) {
     e.preventDefault();
     try {
       // Nota: Qui chiameremo la rotta PATCH/PUT che creeremo nel backend
-      const response = await axios.put(`http://localhost:3000/onlinelibrary/users/${user.id}`, formData, {
+      const response = await axios.put(`http://localhost:3000/topinibrary/users/${user.id}`, formData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
       });
       

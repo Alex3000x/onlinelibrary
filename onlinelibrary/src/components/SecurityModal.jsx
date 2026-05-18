@@ -30,7 +30,7 @@ function SecurityModal({ show, onHide, user, onLogout, onUpdateSuccess }) {
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:3000/onlinelibrary/users/${user.id}/password`, passwords, {
+      await axios.patch(`http://localhost:3000/topinibrary/users/${user.id}/password`, passwords, {
         headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
       });
       alert("Password aggiornata correttamente!");
@@ -45,7 +45,7 @@ function SecurityModal({ show, onHide, user, onLogout, onUpdateSuccess }) {
     e.preventDefault();
     try {
       // Chiamata alla futura rotta del backend (PATCH o PUT)
-      const response = await axios.patch(`http://localhost:3000/onlinelibrary/users/${user.id}/email`, emailData, {
+      const response = await axios.patch(`http://localhost:3000/topinibrary/users/${user.id}/email`, emailData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
       });
 
@@ -68,7 +68,7 @@ function SecurityModal({ show, onHide, user, onLogout, onUpdateSuccess }) {
   const handleDeleteAccount = async () => {
     if (window.confirm("Sei sicuro di voler eliminare definitivamente il tuo account? Questa azione non è reversibile.")) {
       try {
-        await axios.delete(`http://localhost:3000/onlinelibrary/users/${user.id}`, {
+        await axios.delete(`http://localhost:3000/topinibrary/users/${user.id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
         });
         alert("Account eliminato. Ci dispiace vederti andare via!");

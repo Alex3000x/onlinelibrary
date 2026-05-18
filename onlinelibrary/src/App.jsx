@@ -68,7 +68,7 @@ function App() {
         console.log("Tentativo di eliminazione libro con ID:", bookId);
 
         // Chiamata DELETE coerente con la tua handleSubmit
-        const response = await axios.delete(`http://localhost:3000/onlinelibrary/books/${bookId}`, {
+        const response = await axios.delete(`http://localhost:3000/topinibrary/books/${bookId}`, {
                                   headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
                                 });
 
@@ -95,7 +95,7 @@ function App() {
     console.log("Nuovi dati:", updatedFormData);
 
   // Chiamata PUT coerente con lo stile delle altre funzioni
-  const response = await axios.put(`http://localhost:3000/onlinelibrary/books/${bookId}`, {
+  const response = await axios.put(`http://localhost:3000/topinibrary/books/${bookId}`, {
     ...updatedFormData,
     publicationYear: Number(updatedFormData.publicationYear),
     ISBN: Number(updatedFormData.ISBN),
@@ -196,7 +196,7 @@ const handleLogout = () => {
 
   // Carichiamo i libri all'avvio per alimentare i caroselli della Home
   useEffect(() => {
-    fetch("http://localhost:3000/onlinelibrary/books") // Assicurati che il percorso sia corretto
+    fetch("http://localhost:3000/topinibrary/books") // Assicurati che il percorso sia corretto
       .then((res) => res.json())
       .then((data) => setAllBooks(data))
       .catch((err) => console.error("Error loading books:", err));

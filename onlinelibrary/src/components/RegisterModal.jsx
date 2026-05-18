@@ -36,7 +36,7 @@ function RegisterModal({ show, onHide, onSwitchToLogin }) {
     console.log("Dati registrazione per il DB:", userData);
     // fetch POST /register
     try {
-        const response = await axios.post("http://localhost:3000/onlinelibrary/register", userData);
+        const response = await axios.post("http://localhost:3000/topinibrary/register", userData);
         alert(response.data.message);
         onSwitchToLogin(); // Dopo la registrazione, portalo al login
     } catch (err) {

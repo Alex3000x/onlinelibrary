@@ -35,8 +35,8 @@ app.use(cors()); // abilita CORS per tutte le rotte
 
 let db; 
 
-// GET /onlinelibrary/books?property= - Retrieve books by title, author, publication year, genre, ISBN, publisher, or language
-app.get("/onlinelibrary/books", async (req, res, next) => {
+// GET /topinibrary/books?property= - Retrieve books by title, author, publication year, genre, ISBN, publisher, or language
+app.get("/topinibrary/books", async (req, res, next) => {
     try {
         const booksCollection = db.collection("books");
         const filter = {};
@@ -112,15 +112,15 @@ app.get("/onlinelibrary/books", async (req, res, next) => {
         }
 
         console.log(filter);
-        const onlinelibrary = await booksCollection.find(filter).toArray();
-        res.json(onlinelibrary);
+        const books = await booksCollection.find(filter).toArray();
+        res.json(books);
     }
     catch (err) {
     next(err);
     }});
 
-// GET /onlinelibrary/books/1984 - Retrieve a book by its title
-app.get("/onlinelibrary/books/:title", async (req, res, next) => {
+// GET /topinibrary/books/1984 - Retrieve a book by its title
+app.get("/topinibrary/books/:title", async (req, res, next) => {
     try {
         const booksCollection = db.collection("books");
 
@@ -138,8 +138,8 @@ app.get("/onlinelibrary/books/:title", async (req, res, next) => {
         next(err);
     }});
 
-// GET /onlinelibrary/books/69fcd5014141996a9fbeaa28 - Retrieve a book by its _id
-app.get("/onlinelibrary/books/:id", async (req, res, next) => {
+// GET /topinibrary/books/69fcd5014141996a9fbeaa28 - Retrieve a book by its _id
+app.get("/topinibrary/books/:id", async (req, res, next) => {
     try {
         const booksCollection = db.collection("books");
         const { id } = req.params; // Estrae l'ID dall'URL
@@ -160,8 +160,8 @@ app.get("/onlinelibrary/books/:id", async (req, res, next) => {
     }
 });
 
-// POST /onlinelibrary/books - Add a new book to the library
-app.post("/onlinelibrary/books", verifyToken, async (req, res, next) => {
+// POST /topinibrary/books - Add a new book to the library
+app.post("/topinibrary/books", verifyToken, async (req, res, next) => {
     try {
         // BLOCCO DI SICUREZZA: Impedisce l'accesso agli utenti non admin
         if (!req.user.isAdmin) {
@@ -200,8 +200,8 @@ app.post("/onlinelibrary/books", verifyToken, async (req, res, next) => {
     }
 });
 
-// DELETE /onlinelibrary/books/69fcd5014141996a9fbeaa28 - Remove a book from the library by its _id
-app.delete("/onlinelibrary/books/:id", verifyToken, async (req, res, next) => {
+// DELETE /topinibrary/books/69fcd5014141996a9fbeaa28 - Remove a book from the library by its _id
+app.delete("/topinibrary/books/:id", verifyToken, async (req, res, next) => {
     try {
         // BLOCCO DI SICUREZZA
         if (!req.user.isAdmin) {
@@ -237,8 +237,8 @@ app.delete("/onlinelibrary/books/:id", verifyToken, async (req, res, next) => {
     }
 });
 
-// PUT /onlinelibrary/books/69fcd5014141996a9fbeaa28 - Update the details of a book by its _id
-app.put("/onlinelibrary/books/:id", verifyToken, async (req, res, next) => {
+// PUT /topinibrary/books/69fcd5014141996a9fbeaa28 - Update the details of a book by its _id
+app.put("/topinibrary/books/:id", verifyToken, async (req, res, next) => {
     try {
         // BLOCCO DI SICUREZZA
         if (!req.user.isAdmin) {
@@ -290,8 +290,8 @@ app.put("/onlinelibrary/books/:id", verifyToken, async (req, res, next) => {
     }
 });
 
-// POST /onlinelibrary/register - Register a new user
-app.post("/onlinelibrary/register", async (req, res, next) => {
+// POST /topinibrary/register - Register a new user
+app.post("/topinibrary/register", async (req, res, next) => {
     try {
         const usersCollection = db.collection("users");
 
@@ -329,8 +329,8 @@ app.post("/onlinelibrary/register", async (req, res, next) => {
     }
 });
 
-// POST /onlinelibrary/login - Authenticate a user and return a JWT token
-app.post("/onlinelibrary/login", async (req, res, next) => {
+// POST /topinibrary/login - Authenticate a user and return a JWT token
+app.post("/topinibrary/login", async (req, res, next) => {
     try {
         const usersCollection = db.collection("users");
 
@@ -382,8 +382,8 @@ app.post("/onlinelibrary/login", async (req, res, next) => {
     }
 });
 
-// POST /onlinelibrary/refresh - Refresh the access token using a refresh token
-app.post("/onlinelibrary/refresh", async (req, res, next) => {
+// POST /topinibrary/refresh - Refresh the access token using a refresh token
+app.post("/topinibrary/refresh", async (req, res, next) => {
     try {
         const { refreshToken } = req.body;
         if (!refreshToken) {
@@ -408,7 +408,7 @@ app.post("/onlinelibrary/refresh", async (req, res, next) => {
 // ==========================================
 // 1. UTENTI LOGGATI: AGGIORNAMENTO PROFILO
 // ==========================================
-app.put("/onlinelibrary/users/:id", verifyToken, async (req, res, next) => {
+app.put("/topinibrary/users/:id", verifyToken, async (req, res, next) => {
     try {
         // Sicurezza: Un utente standard può modificare SOLO il proprio profilo
         if (req.user.id !== req.params.id && !req.user.isAdmin) {
@@ -444,7 +444,7 @@ app.put("/onlinelibrary/users/:id", verifyToken, async (req, res, next) => {
 // ==========================================
 // 2. UTENTI LOGGATI: MODIFICA INDIRIZZO EMAIL
 // ==========================================
-app.patch("/onlinelibrary/users/:id/email", verifyToken, async (req, res, next) => {
+app.patch("/topinibrary/users/:id/email", verifyToken, async (req, res, next) => {
     try {
         if (req.user.id !== req.params.id) {
             return res.status(403).json({ error: "Non autorizzato." });
@@ -482,7 +482,7 @@ app.patch("/onlinelibrary/users/:id/email", verifyToken, async (req, res, next) 
 // ==========================================
 // 3. UTENTI LOGGATI: CAMBIO PASSWORD
 // ==========================================
-app.patch("/onlinelibrary/users/:id/password", verifyToken, async (req, res, next) => {
+app.patch("/topinibrary/users/:id/password", verifyToken, async (req, res, next) => {
     try {
         if (req.user.id !== req.params.id) {
             return res.status(403).json({ error: "Non autorizzato." });
@@ -517,7 +517,7 @@ app.patch("/onlinelibrary/users/:id/password", verifyToken, async (req, res, nex
 // ==========================================
 // 4. UTENTI LOGGATI: ELIMINAZIONE ACCOUNT
 // ==========================================
-app.delete("/onlinelibrary/users/:id", verifyToken, async (req, res, next) => {
+app.delete("/topinibrary/users/:id", verifyToken, async (req, res, next) => {
     try {
         if (req.user.id !== req.params.id && !req.user.isAdmin) {
             return res.status(403).json({ error: "Azione non autorizzata." });
@@ -539,7 +539,7 @@ app.delete("/onlinelibrary/users/:id", verifyToken, async (req, res, next) => {
 // ==========================================================
 // 5. AREA RISERVATA ADMIN: GET TUTTI GLI UTENTI
 // ==========================================================
-app.get("/onlinelibrary/users", verifyToken, async (req, res, next) => {
+app.get("/topinibrary/users", verifyToken, async (req, res, next) => {
     try {
         // BLOCCO DI SICUREZZA: Solo chi ha isAdmin nel token può passare
         if (!req.user.isAdmin) {
@@ -560,7 +560,7 @@ app.get("/onlinelibrary/users", verifyToken, async (req, res, next) => {
 // ==========================================================
 // 6. AREA RISERVATA ADMIN: CAMBIO RUOLO UTENTE (SWITCH)
 // ==========================================================
-app.patch("/onlinelibrary/admin/users/:id/role", verifyToken, async (req, res, next) => {
+app.patch("/topinibrary/admin/users/:id/role", verifyToken, async (req, res, next) => {
     try {
         if (!req.user.isAdmin) {
             return res.status(403).json({ error: "Accesso negato." });

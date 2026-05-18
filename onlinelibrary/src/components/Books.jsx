@@ -32,7 +32,7 @@ function Books({searchTerm, searchCriteria, onShowDetail, onUpdate, onDelete, is
                 // Aggiungiamo un piccolo delay artificiale di 500ms per mostrare lo spinner (opzionale)
                 await new Promise(resolve => setTimeout(resolve, 500));
 
-                const response = await axios.get("http://localhost:3000/onlinelibrary/books?" + searchCriteria + "=" + searchTerm);
+                const response = await axios.get("http://localhost:3000/topinibrary/books?" + searchCriteria + "=" + searchTerm);
 
 
                 console.log(response.data);

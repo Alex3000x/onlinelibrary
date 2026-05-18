@@ -11,7 +11,7 @@ function AdminUsersModal({ show, onHide, currentUser }) {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get("http://localhost:3000/onlinelibrary/users", {
+      const response = await axios.get("http://localhost:3000/topinibrary/users", {
         headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
       });
       setUsers(response.data);
@@ -35,7 +35,7 @@ function AdminUsersModal({ show, onHide, currentUser }) {
     try {
       const newStatus = !currentStatus;
       
-      await axios.patch(`http://localhost:3000/onlinelibrary/admin/users/${userId}/role`, 
+      await axios.patch(`http://localhost:3000/topinibrary/admin/users/${userId}/role`, 
         { isAdmin: newStatus },
         { headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` } }
       );
