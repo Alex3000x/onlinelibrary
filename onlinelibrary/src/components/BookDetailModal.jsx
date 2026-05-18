@@ -18,6 +18,11 @@ function BookDetailModal({ show, onHide, book }) {
     return trimmed === "" ? "N/A" : trimmed;
   };
 
+  // Calcolo pulito del valore numerico per evitare errori nel colore del testo (> 0)
+  const numericCopies = (book.copiesNumber !== undefined && book.copiesNumber !== null && book.copiesNumber !== "")
+    ? Number(book.copiesNumber)
+    : 0;
+
   return (
     <Modal 
       show={show} 
@@ -35,7 +40,11 @@ function BookDetailModal({ show, onHide, book }) {
           {/* Cover a sinistra */}
           <Col md={5} className="text-center mb-3 mb-md-0">
             <img 
-              src={book.cover} 
+              // STESSA LOGICA: Se l'ISBN è farlocco o mancante, non interpellare OpenLibrary e usa il locale
+              src={(book.ISBN && book.ISBN !== "N/A" && book.ISBN.trim() !== "") 
+                ? (book.cover || "/IMG_16663.PNG") 
+                : "/IMG_16663.PNG"
+              } 
               alt={book.title} 
               className="img-fluid rounded shadow" 
               style={{ maxHeight: '400px', objectFit: 'cover' }}
@@ -69,7 +78,8 @@ function BookDetailModal({ show, onHide, book }) {
               <Row className="text-muted mt-2">
                 <Col xs={6}>
                   <strong>Copie disponibili:</strong> 
-                  <span className={`ms-2 ${renderText(book.copiesNumber) > 0 ? "text-dark" : "text-danger"}`}>
+                  {/* MODIFICATO: Ora controlla la variabile numerica pulita anziché la stringa di renderText */}
+                  <span className={`ms-2 ${numericCopies > 0 ? "text-dark" : "text-danger"}`}>
                     {renderText(book.copiesNumber)}
                   </span>
                 </Col>

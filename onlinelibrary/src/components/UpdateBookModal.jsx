@@ -29,8 +29,8 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate, onRefresh }) {
         publisher: bookP.publisher || '',
         description: bookP.description || '',
         language: bookP.language || '',
-        cover: bookP.cover || '',
         copiesNumber: bookP.copiesNumber || 0,
+        cover: bookP.cover || '',
       });
     }
   }, [bookP]);
@@ -45,7 +45,8 @@ function UpdateBookModal({ show, onHide, bookP, onUpdate, onRefresh }) {
     const updatedData = {
       ...formData,
       copiesNumber: Number(formData.copiesNumber),
-      available: Number(formData.copiesNumber) > 0 
+      available: Number(formData.copiesNumber) > 0,
+      cover: "https://covers.openlibrary.org/b/isbn/" + formData.ISBN + "-L.jpg"
     };
     await onUpdate(bookP._id, updatedData); 
     onRefresh(); // Aggiorna la lista dei libri dopo l'aggiornamento
