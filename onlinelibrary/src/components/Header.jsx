@@ -5,6 +5,8 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
 
   // Stato per controllare se il cursore è sopra il bottone di Login
   const [isLoginHovered, setIsLoginHovered] = useState(false);
+  // Stato per controllare se il cursore è sopra il bottone di Logout
+  const [isLogoutHovered, setIsLogoutHovered] = useState(false);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -138,7 +140,23 @@ function Header({ onShowCatalog , onShowHome, onShowLogin, user, onLogout, onSho
                   <Dropdown.Divider className="my-2 pb-2" />
                   
                   {/* 5. TASTO LOGOUT (In fondo per facile arrivals) */}
-                  <Dropdown.Item onClick={onLogout} className="py-2 pt-1 rounded small text-danger fw-bold text-center border border-danger-subtle rounded-pill">
+                  <Dropdown.Item 
+                    as="button" // Forza l'elemento a comportarsi come un vero bottone, evitando i blocchi di stile di Bootstrap
+                    onClick={onLogout} 
+                    onMouseEnter={() => setIsLogoutHovered(true)}
+                    onMouseLeave={() => setIsLogoutHovered(false)}
+                    className="w-100 py-2 fw-bold text-center btn"
+                    style={{
+                      borderRadius: '50rem', // Mantiene la forma a pillola coerente con il login
+                      borderStyle: 'solid',
+                      borderWidth: '2px', // Spessore di 2px identico al Login per renderlo ben visibile
+                      borderColor: '#dc3545', // Bordo rosso fisso che non sparisce mai!
+                      backgroundColor: isLogoutHovered ? '#dc3545' : 'transparent',
+                      color: isLogoutHovered ? '#ffffff' : '#dc3545',
+                      transition: 'background-color 0.2s ease, color 0.2s ease',
+                      cursor: 'pointer'
+                    }}
+                  >
                     Logout
                   </Dropdown.Item>
 
