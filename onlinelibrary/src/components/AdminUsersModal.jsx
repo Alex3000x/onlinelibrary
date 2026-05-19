@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Modal, Table, Form, Spinner, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { Modal, Table, Form, Spinner, Alert } from "react-bootstrap";
+import axios from "axios";
 
 function AdminUsersModal({ show, onHide, currentUser }) {
   const [users, setUsers] = useState([]);
@@ -11,9 +11,14 @@ function AdminUsersModal({ show, onHide, currentUser }) {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get("http://localhost:3000/topinibrary/users", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
-      });
+      const response = await axios.get(
+        "http://localhost:3000/topinibrary/users",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      );
       setUsers(response.data);
     } catch (err) {
       console.error(err);
@@ -21,7 +26,7 @@ function AdminUsersModal({ show, onHide, currentUser }) {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   // Carica la lista degli utenti quando il modale viene aperto
   useEffect(() => {
@@ -34,29 +39,38 @@ function AdminUsersModal({ show, onHide, currentUser }) {
   const handleToggleAdmin = async (userId, currentStatus) => {
     try {
       const newStatus = !currentStatus;
-      
-      await axios.patch(`http://localhost:3000/topinibrary/admin/users/${userId}/role`, 
+
+      await axios.patch(
+        `http://localhost:3000/topinibrary/admin/users/${userId}/role`,
         { isAdmin: newStatus },
-        { headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
       );
 
       // Aggiorna lo stato locale per riflettere il cambiamento nella tabella
-      setUsers(prevUsers => 
-        prevUsers.map(user => 
-          user._id === userId ? { ...user, isAdmin: newStatus } : user
-        )
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === userId ? { ...user, isAdmin: newStatus } : user,
+        ),
       );
     } catch (err) {
-      alert(err.response?.data?.error || "Errore durante la modifica del ruolo");
+      alert(
+        err.response?.data?.error || "Errore durante la modifica del ruolo",
+      );
     }
   };
 
   return (
     <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton className="border-0">
-        <Modal.Title className="fw-bold text-danger">👑 Area Riservata: Gestione Utenti</Modal.Title>
+        <Modal.Title className="fw-bold text-danger">
+          👑 Area Riservata: Gestione Utenti
+        </Modal.Title>
       </Modal.Header>
-      
+
       <Modal.Body className="px-4 pb-4">
         {error && <Alert variant="danger">{error}</Alert>}
 
@@ -66,7 +80,7 @@ function AdminUsersModal({ show, onHide, currentUser }) {
             <p className="small text-muted mt-2">Caricamento utenti...</p>
           </div>
         ) : (
-          <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+          <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
             <Table hover responsive align="middle" className="border-top">
               <thead>
                 <tr>
@@ -78,21 +92,24 @@ function AdminUsersModal({ show, onHide, currentUser }) {
                 </tr>
               </thead>
               <tbody>
-                {users.map(u => (
+                {users.map((u) => (
                   <tr key={u._id}>
                     <td className="fw-bold">@{u.username}</td>
                     <td>{u.firstName}</td>
                     <td>{u.lastName}</td>
                     <td>{u.email}</td>
                     <td className="text-center">
-                      <Form.Check 
+                      <Form.Check
                         type="switch"
                         id={`switch-${u._id}`}
                         // Impedisce all'admin di revocare i permessi a se stesso per evitare blocchi
-                        disabled={u._id === currentUser?.id || u._id === currentUser?._id}
+                        disabled={
+                          u._id === currentUser?.id ||
+                          u._id === currentUser?._id
+                        }
                         checked={u.isAdmin}
                         onChange={() => handleToggleAdmin(u._id, u.isAdmin)}
-                        style={{ cursor: 'pointer', display: 'inline-block' }}
+                        style={{ cursor: "pointer", display: "inline-block" }}
                       />
                     </td>
                   </tr>
