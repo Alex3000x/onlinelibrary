@@ -134,7 +134,7 @@ function AddBookModal({ show, onHide, onRefresh }) {
           <Row>
             <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold small">Titolo</Form.Label>
+                <Form.Label className="fw-bold small">Titolo*</Form.Label>
                 <Form.Control
                   type="text"
                   name="title"
@@ -147,7 +147,7 @@ function AddBookModal({ show, onHide, onRefresh }) {
             </Col>
             <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold small">Autore</Form.Label>
+                <Form.Label className="fw-bold small">Autore*</Form.Label>
                 <Form.Control
                   type="text"
                   name="author"
@@ -191,7 +191,7 @@ function AddBookModal({ show, onHide, onRefresh }) {
             </Col>
             <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold small">Genere</Form.Label>
+                <Form.Label className="fw-bold small">Genere*</Form.Label>
                 <Form.Select
                   name="genre"
                   required
@@ -211,7 +211,7 @@ function AddBookModal({ show, onHide, onRefresh }) {
             </Col>
             <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold small">Lingua</Form.Label>
+                <Form.Label className="fw-bold small">Lingua*</Form.Label>
                 <Form.Select
                   name="language"
                   required
